@@ -1,0 +1,53 @@
+<mat-toolbar>
+  <button mat-icon-button class="white md-36" aria-label="Weathersense menu">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <span class="sitename-wrapper">
+    <a [routerLink]="['/']">
+      <h1>WeatherSense</h1>
+    </a>
+  </span>
+
+  <button mat-icon-button class="white md-36" aria-label="Thermostat charts">
+    <mat-icon>thermostat</mat-icon>
+  </button>
+  <button mat-icon-button class="white md-36" aria-label="Charts">
+    <mat-icon>insert_chart_outlined</mat-icon>
+  </button>
+  <span class="row-middle"></span>
+
+  <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+    <mat-icon>candlestick_chart</mat-icon>
+  </button>
+  <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+    <mat-icon>insights</mat-icon>
+  </button>
+</mat-toolbar>
+
+<!--
+<div class="sitename-wrapper">
+<a [routerLink]="['/']">
+  <h1>WeatherSense</h1>
+</a>
+</div>
+
+<a class="button"><i class="material-icons white md-36">thermostat</i></a>
+<a class="button"><i class="material-icons white md-36">insert_chart_outlined</i></a>
+
+<div class="row-middle"></div>
+
+<a class="button"><i class="material-icons white md-36">candlestick_chart</i></a>
+<a class="button"><i class="material-icons white md-36">insights</i></a>
+<a class="button"><i class="material-icons white md-36">device_hub</i></a>
+<a class="button" [routerLink]="['/device-view']"><i class="material-icons white md-36">developer_board</i></a>
+
+
+<div *ngIf="loginDisplay">
+<a class="button fancy-button"><i class="material-icons">account_circle</i>Sign In</a>
+</div>
+
+<div *ngIf="!loginDisplay">
+  <a class="button"><i class="material-icons white md-36 ">account_circle</i></a>
+</div>
+-->
