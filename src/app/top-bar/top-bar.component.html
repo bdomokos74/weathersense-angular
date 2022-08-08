@@ -1,0 +1,33 @@
+<mat-toolbar>
+  <button mat-icon-button class="white md-36" aria-label="Weathersense menu">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <span class="sitename-wrapper">
+    <a [routerLink]="['/']">
+      <h1>WeatherSense</h1>
+    </a>
+  </span>
+
+  <button mat-icon-button class="white md-36" aria-label="Thermostat charts">
+    <a [routerLink]="['/device-view']">
+      <mat-icon>thermostat</mat-icon>
+    </a>
+  </button>
+  <button mat-icon-button class="white md-36" aria-label="Charts">
+    <mat-icon>insert_chart_outlined</mat-icon>
+  </button>
+  <span class="row-middle"></span>
+
+  <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+    <mat-icon>candlestick_chart</mat-icon>
+  </button>
+  <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+    <mat-icon>insights</mat-icon>
+  </button>
+  <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+    <a [routerLink]="['/profile']">
+      <mat-icon>account_circle</mat-icon>
+    </a>
+  </button>
+</mat-toolbar>
