@@ -25,6 +25,11 @@ const routes = [
     component: ProfileComponent,
     canActivate: [MsalGuard]
   },
+  {
+    path: 'chart-view-time',
+    component: ChartViewTimeComponent,
+    canActivate: [MsalGuard]
+  },
 ];
 
 const isIE = window.navigator.userAgent.indexOf("MSIE ") > -1 || window.navigator.userAgent.indexOf("Trident/") > -1; // Remove this line to use Angular Universal
@@ -52,6 +57,7 @@ import {
   MSAL_INTERCEPTOR_CONFIG,
   MsalGuardConfiguration,
 } from '@azure/msal-angular';
+import { ChartViewTimeComponent } from './chart-view-time/chart-view-time.component';
 
 export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication({
@@ -71,7 +77,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     system: {
       loggerOptions: {
         loggerCallback,
-        logLevel: LogLevel.Info,
+        logLevel: LogLevel.Verbose,
         piiLoggingEnabled: false
       }
     }
@@ -82,16 +88,18 @@ export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
   const protectedResourceMap = new Map<string, Array<string>>();
   // protectedResourceMap.set('https://graph.microsoft.com/v1.0/me', ['user.read']); // Prod environment. Uncomment to use.
   protectedResourceMap.set('https://graph.microsoft.com/v1.0/me', ['user.read']);
+  protectedResourceMap.set('http://localhost:4200/blob/weathersense-data', ['https://storage.azure.com/.default']);
+  protectedResourceMap.set('http://localhost:4200/hub/devices', ['https://iothubs.azure.net/.default']);
 
   return {
-    interactionType: InteractionType.Redirect,
+    interactionType: InteractionType.Popup,
     protectedResourceMap
   };
 }
 
 export function MSALGuardConfigFactory(): MsalGuardConfiguration {
   return {
-    interactionType: InteractionType.Redirect,
+    interactionType: InteractionType.Popup,
     authRequest: {
       scopes: ['user.read']
     },
@@ -107,7 +115,8 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
     TopBarComponent,
     ChartLegendComponent,
     DeviceViewComponent,
-    ProfileComponent
+    ProfileComponent,
+    ChartViewTimeComponent
   ],
   imports: [
     BrowserModule,

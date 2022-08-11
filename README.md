@@ -32,3 +32,70 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 https://docs.microsoft.com/en-us/azure/active-directory/develop/msal-client-application-configuration
 https://docs.microsoft.com/en-us/azure/active-directory/develop/tutorial-v2-angular-auth-code
+https://mater`ial.angular.io/components/table/examples#table-http
+`
+
+### Scratchpad
+
+
+
+#### IoT HUB query
+
+```
+SELECT deviceId, properties.desired.doSleep, properties.reported.fwVersion, properties.reported.gitRevision, properties.reported.$metadata.$lastUpdated
+FROM devices
+```
+
+
+"target": "https://weathersensehub.azure-devices.net",
+
+iothub api
+89d10474-74af-4874-99a7-c23c2f643083
+https://docs.microsoft.com/en-us/cli/azure/ad/app/permission?view=azure-cli-latest
+
+az ad app permission list --id 5ee20736-5cc8-4466-acac-fe2062a9a1a7
+[
+{
+"resourceAccess": [
+{
+"id": "03e0da56-190b-40ad-a80c-ea378c433f7f",
+"type": "Scope"
+}
+],
+"resourceAppId": "e406a681-f3d4-42a8-90b6-c2b029497af1" <- azure storage
+},
+{
+"resourceAccess": [
+{
+"id": "e1fe6dd8-ba31-4d61-89e7-88639da4683d",
+"type": "Scope"
+}
+],
+"resourceAppId": "00000003-0000-0000-c000-000000000000"
+}
+]
+
+az role definition list --query "[].{name: name, descr: description}[? contains(descr, 'IoT')]"
+
+
+
+
+5ee20736-5cc8-4466-acac-fe2062a9a1a7 <- wstestapp
+89d10474-74af-4874-99a7-c23c2f643083 <- iot hub
+4ea46cd5-c1b2-4a8e-910b-273211f9ce47 <- device registry contributor
+
+az ad app permission add --id 5ee20736-5cc8-4466-acac-fe2062a9a1a7 --api 89d10474-74af-4874-99a7-c23c2f643083 --api-permission 4ea46cd5-c1b2-4a8e-910b-273211f9ce47=Role
+
+az ad app permission grant --id 5ee20736-5cc8-4466-acac-fe2062a9a1a7 --api 89d10474-74af-4874-99a7-c23c2f643083
+{
+"@odata.context": "https://graph.microsoft.com/v1.0/$metadata#oauth2PermissionGrants/$entity",
+"clientId": "cb213c98-d380-4424-91e3-0e06669529b9",
+"consentType": "AllPrincipals",
+"id": "mDwhy4DTJESR4w4GZpUpufC2fU-zvJpBvtc65WxXgUw",
+"principalId": null,
+"resourceId": "4f7db6f0-bcb3-419a-bed7-3ae56c57814c",
+"scope": "Resource"
+}
+
+https://blog.memoryleek.co.uk/apim/azure/identity/2021/08/13/using-managed-identity-to-connect-to-azure-services-from-api-management.html
+https://docs.microsoft.com/en-us/azure/api-management/api-management-authentication-policies#ManagedIdentity

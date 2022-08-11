@@ -32,4 +32,8 @@ export class ProfileComponent implements OnInit {
         this.profile = profile;
       });
   }
+
+  signout() {
+    console.log("signing out");
+  }
 }

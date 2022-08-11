@@ -68,7 +68,8 @@
               "browserTarget": "weathersense-angular2:build:production"
             },
             "development": {
-              "browserTarget": "weathersense-angular2:build:development"
+              "browserTarget": "weathersense-angular2:build:development",
+              "proxyConfig": "./proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

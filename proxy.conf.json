@@ -1,0 +1,18 @@
+{
+  "/blob/*": {
+    "target": "https://weathersenseteststorage.blob.core.windows.net",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/blob": ""
+    }
+  },
+  "/hub/*": {
+    "target": "https://weathersensehub.azure-devices.net",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/hub": ""
+    }
+  }
+}
