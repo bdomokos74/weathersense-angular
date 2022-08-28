@@ -1,0 +1,19 @@
+.line {
+  fill: none;
+  stroke: rgb(97, 152, 198);
+  stroke-width: 2px;
+}
+
+.badge-sensor1 {
+  background-color: #fbb4ae;
+}
+.line.m1 {
+  fill: none;
+  stroke: #fbb4ae;
+  stroke-width: 2px;
+}
+.circle.m1 {
+  fill: #fbb4ae;
+  /* stroke-width: 2px; */
+}
+
