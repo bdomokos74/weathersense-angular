@@ -99,3 +99,9 @@ az ad app permission grant --id 5ee20736-5cc8-4466-acac-fe2062a9a1a7 --api 89d10
 
 https://blog.memoryleek.co.uk/apim/azure/identity/2021/08/13/using-managed-identity-to-connect-to-azure-services-from-api-management.html
 https://docs.microsoft.com/en-us/azure/api-management/api-management-authentication-policies#ManagedIdentity
+
+### Add d3
+
+```
+npm install d3 && npm install @types/d3 --save-dev
+```

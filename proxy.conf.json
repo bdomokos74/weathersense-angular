@@ -1,6 +1,6 @@
 {
   "/blob/*": {
-    "target": "https://weathersenseteststorage.blob.core.windows.net",
+    "target": "https://weathersensestorage.blob.core.windows.net",
     "secure": true,
     "changeOrigin": true,
     "pathRewrite": {

@@ -58,6 +58,9 @@ import {
   MsalGuardConfiguration,
 } from '@azure/msal-angular';
 import { ChartViewTimeComponent } from './chart-view-time/chart-view-time.component';
+import { ChartMenuComponent } from './chart-view-time/chart-menu/chart-menu.component';
+import {TimeChartComponent} from './chart-view-time/time-chart/time-chart.component';
+import { ChartContainerComponent } from './chart-view-time/chart-container/chart-container.component';
 
 export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication({
@@ -116,7 +119,10 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
     ChartLegendComponent,
     DeviceViewComponent,
     ProfileComponent,
-    ChartViewTimeComponent
+    ChartViewTimeComponent,
+    ChartMenuComponent,
+    TimeChartComponent,
+    ChartContainerComponent
   ],
   imports: [
     BrowserModule,
