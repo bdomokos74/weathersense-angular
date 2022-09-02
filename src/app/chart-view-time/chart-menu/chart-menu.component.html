@@ -1,1 +1,25 @@
-<div>chart-menu works!</div>
+<div class="container">
+  <div class="p-2">
+
+    <mat-form-field class="form-full-width" appearance="fill">
+      <mat-label>Device</mat-label>
+      <mat-select [(ngModel)]="_selectedDevice">
+        <mat-option *ngFor="let d of devices" [value]="d">
+          {{d}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="form-full-width" appearance="fill">
+      <mat-label>MM/DD/YYYY</mat-label>
+      <input matInput [matDatepicker]="picker" [formControl]="_measDate" (dateChange)="onDateChage($event)">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+  </div>
+
+  <div>
+    {{_measDate.getRawValue()}}, {{_selectedDevice}}
+  </div>
+</div>

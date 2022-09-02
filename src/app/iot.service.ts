@@ -25,18 +25,61 @@ export class IoTService {
           d.setUTCSeconds(epochSeconds);
           return d;
         }
-        let measurements = str.split('\n')
-          .filter(s => s.length != 0)
-          .map<Measurement>(item => {
-            let parsed = JSON.parse(item);
-            parsed.ts = epochToDate(parsed.ts);
-            return parsed;
-          });
+        let measurements: Measurement[]
+        try {
+          measurements = str.split('\n')
+            .filter(s => s.length != 0)
+            .map<Measurement>(item => {
+              let parsed = JSON.parse(item);
+              parsed.ts = epochToDate(parsed.ts);
+              return parsed;
+            });
+        } catch(e) {
+          //2022-08-09T23:53:22.000000,  22.33,  97409.00, 41.55,     , 0       ,25.47,  19.19,
+          //2022-08-05T00:51:23.737603,  27.39,  966.87,   43.68, 0.54, 240000
+
+          let rows = str.split('\n');
+          let tmp = rows[0].split(',')
+          console.log("oldformat, cols="+tmp.length);
+          console.log(tmp.map( (s, i) => i+": "+s).join(" "))
+
+          measurements = rows
+            .filter(s => s.length != 0)
+            .map<Measurement>(item => {
+              let parsed = item.split(',');
+              console.log(parsed.length)
+              let meas!: Measurement;
+              if(parsed.length===9) {
+                meas = {
+                  id: undefined,
+                  ts: new Date(parsed[0]),
+                  p: parseFloat(parsed[2]),
+                  h: parseFloat(parsed[3]),
+                  t1: parsed[6]?parseFloat(parsed[6]):undefined,
+                  t2: parsed[7]?parseFloat(parsed[7]):undefined,
+                }
+              } if( parsed.length===6) {
+                meas = {
+                  id: undefined,
+                  ts: new Date(parsed[0]),
+                  p: parseFloat(parsed[2]),
+                  h: parseFloat(parsed[3]),
+                  t1: parseFloat(parsed[1]),
+                  t2: undefined
+                }
+              } else {
+
+              }
+              return meas;
+            });
+        }
         let len = measurements.length;
         console.log(measurements[len - 1].ts);
         console.log(measurements[len - 1]);
         subscriber.next(measurements);
         subscriber.complete();
+      }, error => {
+          subscriber.error(error)
       });
     });
   }

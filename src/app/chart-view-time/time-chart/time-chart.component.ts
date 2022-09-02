@@ -40,13 +40,11 @@ export class TimeChartComponent implements OnInit {
     this._measurements = value;
 
     console.log("setting measurements, len", this._measurements.length);
-    if(value.length!=0) {
       if (this.viewInited) {
         this.draw();
       } else {
         this.outstandingData = true;
       }
-    }
   }
   get measurements(): Measurement[] {
 
@@ -100,6 +98,11 @@ export class TimeChartComponent implements OnInit {
     console.log(`container id: ${this.container.nativeElement}`)
     const svgContainer = d3.select(".svg-container");
     svgContainer.selectAll("*").remove();
+
+    if(this._measurements.length==0) {
+      return
+    }
+
     const svg = svgContainer.append("svg:svg")
         .attr("width", width)
         .attr("height", height);
@@ -118,9 +121,10 @@ export class TimeChartComponent implements OnInit {
     let t1: any = (obj: any) => obj['t1'];
     let t2: any = (obj: any) => obj['t2'];
     const X: any = d3.map(this._measurements, ts);
-    const Y:any = d3.map(this._measurements, t1);
+    const Y1:any = d3.map(this._measurements, t1);
+    const Y2:any = d3.map(this._measurements, t2);
 
-    const defined = (d: any, i: any) => !isNaN(X[i]) && !isNaN(Y[i])
+    const defined = (d: any, i: any) => !isNaN(X[i]) && !isNaN(Y1[i])
     const D = d3.map(this._measurements, defined);
 
     const xRange = [this.margin.left, this.width - this.margin.right];
@@ -128,8 +132,19 @@ export class TimeChartComponent implements OnInit {
 
     // Compute default y-domain.
     const xDomain: any = d3.extent(X);
-    const yDomain: any = d3.extent(Y);
+    let yDomain1: any = d3.extent(Y1);
+    let yDomain2: any = d3.extent(Y2);
+    console.log("ydomains:", yDomain1, yDomain2)
+
+    let yDomain
+    if(yDomain1[0]==undefined) {
+      yDomain1 = yDomain2
+    } else if(yDomain2[0]==undefined) {
+        yDomain2 = yDomain1
+    }
+    yDomain = [Math.min(yDomain1[0], yDomain2[0]), Math.max(yDomain1[1], yDomain2[1])];
     yDomain[0] = Math.min(yDomain[0], 10)
+    console.log("ydomain:", yDomain)
 
     // Construct scales and axes.
     const xScale = d3.scaleTime().domain(xDomain).range(xRange);//.interpolate(d3.interpolateRound);
@@ -206,21 +221,25 @@ export class TimeChartComponent implements OnInit {
       .style("fill", "none");
 
 
-    svg.append("path")
-      .data([this._measurements])
-      .attr("class", "line m1")
-      .attr("d", line)
-      .style("stroke-width", 0.5)
-      .style("stroke", "currentcolor")
-      .style("fill", "none");
+    if(this.measurements[0].t1) {
+      svg.append("path")
+        .data([this._measurements])
+        .attr("class", "line m1")
+        .attr("d", line)
+        .style("stroke-width", 0.5)
+        .style("stroke", "currentcolor")
+        .style("fill", "none");
+    }
 
-    svg.append("path")
-      .data([this._measurements])
-      .attr("class", "line m3")
-      .attr("d", line2)
-      .style("stroke-width", 0.5)
-      .style("stroke", "lightblue")
-      .style("fill", "none");
+    if(this.measurements[0].t2) {
+      svg.append("path")
+        .data([this._measurements])
+        .attr("class", "line m3")
+        .attr("d", line2)
+        .style("stroke-width", 0.5)
+        .style("stroke", "lightblue")
+        .style("fill", "none");
+    }
   }
 
 }

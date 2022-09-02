@@ -1,9 +1,9 @@
 
 <div class="row">
   <div class="col1">
-    <app-chart-menu ></app-chart-menu>
+    <app-chart-menu [devices]="devices" (selectedDevice)="onSelectedDevice($event)" (measDate)="onMeasDate($event)"></app-chart-menu>
   </div>
   <div class="col2">
-    <app-time-chart [measurements]="measurements"></app-time-chart>
+    <app-time-chart [measurements]="measurements" ></app-time-chart>
   </div>
 </div>
