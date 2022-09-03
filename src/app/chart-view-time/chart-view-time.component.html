@@ -1,7 +1,8 @@
 
 <div class="row">
   <div class="col1">
-    <app-chart-menu [devices]="devices" [measurements]="measTypes"
+    <app-chart-menu [devices]="devices"
+                    [measurements]="measTypes"
                     (selectedDevice)="onSelectedDevice($event)"
                     (measDate)="onMeasDate($event)"
                     (selectedMeasurement)="onSelectedMeasurement($event)"
@@ -10,9 +11,13 @@
   </div>
 
   <div class="col2">
-    <app-time-chart [measurements]="measurements"
-                    [measurementType]="measType"
-                    [measurementType2]="measType2">
+    <app-time-chart [chartData]="chartData">
     </app-time-chart>
+  </div>
+
+  <div class="col3">
+    <app-chart-legend [chartData]="chartData">
+
+    </app-chart-legend>
   </div>
 </div>

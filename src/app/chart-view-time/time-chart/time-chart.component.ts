@@ -1,8 +1,7 @@
 import {Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
-import {Measurement} from "../../measurement";
 import * as d3 from 'd3';
-import {MeasurementType} from "../../measurement-type";
 import {TimeSeries, Range} from "../../timeseries";
+import {ChartData} from "../../chart-data";
 
 @Component({
   selector: 'app-time-chart',
@@ -16,62 +15,29 @@ export class TimeChartComponent implements OnInit {
 
   private viewInited: boolean = false;
   private outstandingData: boolean = false;
-
-  _measurements: Measurement[] = [];
-  _measType!: MeasurementType;
-  _measType2: MeasurementType|undefined;
+  private _chartData: ChartData|undefined = undefined;
 
   @ViewChild('svgcontainer') container! : ElementRef;
-
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     console.log(`resize, ${event.target.innerWidth}, ${this.container.nativeElement.offsetWidth}`);
   }
 
   @Input()
-  set measurements(value: Measurement[]) {
-    this._measurements = value;
-
-    console.log("setting measurements, len", this._measurements.length);
-      if (this.viewInited) {
-        this.draw();
-      } else {
-        this.outstandingData = true;
-      }
-  }
-  get measurements(): Measurement[] {
-    return this._measurements;
-  }
-
-  @Input()
-  set measurementType(value: MeasurementType) {
-    this._measType = value
-    if (this.viewInited) {
-      this.draw();
-    } else {
-      this.outstandingData = true;
-    }
-    console.log("meas change", value)
-  }
-  get measurementType() {
-    return this._measType
-  }
-
-  @Input()
-  set measurementType2(value: MeasurementType|undefined) {
-    this._measType2 = value
+  set chartData(chartData: ChartData|undefined) {
+    this._chartData= chartData
     if (this.viewInited) {
       this.draw();
     } else {
       this.outstandingData = true;
     }
   }
-  get measurementType2() {
-    return this._measType2
+  get chartData():ChartData|undefined {
+    return this._chartData
   }
 
-
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }
@@ -94,7 +60,7 @@ export class TimeChartComponent implements OnInit {
     const svgContainer = d3.select(".svg-container");
     svgContainer.selectAll("*").remove();
 
-    if(this._measurements.length==0) {
+    if(this.chartData===undefined ||this.chartData.measurements.length==0) {
       return
     }
 
@@ -108,26 +74,12 @@ export class TimeChartComponent implements OnInit {
     const xRange:Range = {min: this.margin.left, max:this.width - this.margin.right};
     const yRange:Range = {min: this.height - this.margin.bottom, max: this.margin.top};
 
-    console.log(`draw num meas:${this._measurements.length}, measType:${this._measType.name} w=${this.width}, h=${this.height}`);
+    console.log(`draw num meas:${this.chartData?.measurements.length}, w=${this.width}, h=${this.height}`);
 
     let leftSeries: TimeSeries[] = []
+    if(this.chartData.leftSeries) leftSeries = this.chartData.leftSeries
     let rightSeries: TimeSeries[] = []
-
-    leftSeries.push( TimeSeries.createTimeSerie(this._measurements, 'ts', this._measType.code1, this._measType, "1"))
-    if( this._measType.code2) {
-      let serie2 = TimeSeries.createTimeSerie(this._measurements, 'ts', this._measType.code2, this._measType, "1_1");
-      if(!serie2.empty)
-        leftSeries.push(serie2)
-    }
-
-    if(this._measType2) {
-      rightSeries.push( TimeSeries.createTimeSerie(this._measurements, 'ts', this._measType2.code1, this._measType2, "2"))
-      if( this._measType2.code2) {
-        let serie2 = TimeSeries.createTimeSerie(this._measurements, 'ts', this._measType2.code2, this._measType2, "2_1");
-        if(!serie2.empty)
-          rightSeries.push(serie2)
-      }
-    }
+    if(this.chartData.rightSeries) rightSeries = this.chartData.rightSeries
 
 
     // Compute default y-domain.
@@ -141,7 +93,10 @@ export class TimeChartComponent implements OnInit {
       yDomainLeft[0] = Math.min(yDomainLeft[0], s.yDomain[0])
       yDomainLeft[1] = Math.max(yDomainLeft[1], s.yDomain[1])
     }
-    yDomainLeft[0] = Math.min(yDomainLeft[0], 10)
+
+    if(leftSeries.length>0 && leftSeries[0].type.name==='Temperature')
+      yDomainLeft[0] = Math.min(yDomainLeft[0], 10)
+
     console.log("ydomain:", yDomainLeft)
 
     for (const s of rightSeries) {
@@ -151,7 +106,7 @@ export class TimeChartComponent implements OnInit {
       yDomainRight[1] = Math.max(yDomainRight[1], s.yDomain[1])
     }
 
-    if(rightSeries.length>0) {
+    if(rightSeries.length>0 && rightSeries[0].type.name==='Temperature') {
       yDomainRight[0] = Math.min(yDomainRight[0], 10)
     }
 
@@ -184,7 +139,7 @@ export class TimeChartComponent implements OnInit {
 
   private addLineGraph(svg: any, s: TimeSeries, num: number) {
     svg.append("path")
-      .data([this._measurements])
+      .data([this.chartData?.measurements])
       .attr("class", "line m"+s.color)
       .attr("d", s.getLineMethod())
   }

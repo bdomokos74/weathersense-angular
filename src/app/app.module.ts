@@ -60,12 +60,12 @@ import {
 import { ChartViewTimeComponent } from './chart-view-time/chart-view-time.component';
 import { ChartMenuComponent } from './chart-view-time/chart-menu/chart-menu.component';
 import {TimeChartComponent} from './chart-view-time/time-chart/time-chart.component';
-import {MatFormFieldControl, MatFormFieldModule} from "@angular/material/form-field";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
 import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import { SerieCardComponent } from './chart-legend/serie-card/serie-card.component';
 
 export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication({
@@ -126,7 +126,8 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
     ProfileComponent,
     ChartViewTimeComponent,
     ChartMenuComponent,
-    TimeChartComponent
+    TimeChartComponent,
+    SerieCardComponent
   ],
   imports: [
     BrowserModule,
@@ -137,7 +138,6 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
     MatToolbarModule,
     MatIconModule,
     HttpClientModule,
-    MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,

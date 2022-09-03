@@ -4,6 +4,8 @@ import {Measurement} from "../measurement";
 import {IoTService} from "../iot.service";
 import {DatePipe} from "@angular/common";
 import {MeasurementType} from "../measurement-type";
+import {TimeSeries} from "../timeseries";
+import {ChartData} from "../chart-data";
 
 @Component({
   selector: 'app-chart-view-time',
@@ -13,6 +15,8 @@ import {MeasurementType} from "../measurement-type";
 export class ChartViewTimeComponent implements OnInit {
   pipe = new DatePipe('en-US');
   private fmt: string = 'yyyyMMdd';
+
+  chartData: ChartData|undefined;
 
   measurements: Measurement[] = [];
   devices = ['DOIT1', 'BME280-1', 'DALLAS1', 'ESP32-1']
@@ -40,7 +44,7 @@ export class ChartViewTimeComponent implements OnInit {
     this.iotService.getMeasurements(this.measDevice, this.measDate)
       .subscribe(
         data => {
-          self.measurements = data
+          self.prepareData(data)
         },
         err => {
           console.log("error:", err);
@@ -50,6 +54,39 @@ export class ChartViewTimeComponent implements OnInit {
           console.log('done');
         }
       );
+  }
+
+  private updateData() {
+    let data = this.chartData?.measurements
+    if(data)
+      this.prepareData(data)
+
+  }
+  private prepareData(data: Measurement[]) {
+    let leftSeries: TimeSeries[] = []
+    let rightSeries: TimeSeries[] = []
+
+    leftSeries.push( TimeSeries.createTimeSerie(this.measDevice, data, 'ts', this.measType.code1, this.measType, "1"))
+    if( this.measType.code2) {
+      let serie2 = TimeSeries.createTimeSerie(this.measDevice, data, 'ts', this.measType.code2, this.measType, "1_1");
+      if(!serie2.empty)
+        leftSeries.push(serie2)
+    }
+
+    if(this.measType2) {
+      rightSeries.push( TimeSeries.createTimeSerie(this.measDevice, data, 'ts', this.measType2.code1, this.measType2, "2"))
+      if( this.measType2.code2) {
+        let serie2 = TimeSeries.createTimeSerie(this.measDevice, data, 'ts', this.measType2.code2, this.measType2, "2_1");
+        if(!serie2.empty)
+          rightSeries.push(serie2)
+      }
+    }
+
+    this.chartData = {
+      measurements: data,
+      leftSeries: leftSeries,
+      rightSeries: rightSeries
+    }
   }
 
   onMeasDate($event: Date) {
@@ -65,9 +102,11 @@ export class ChartViewTimeComponent implements OnInit {
 
   onSelectedMeasurement($event: MeasurementType) {
     this.measType = $event
+    this.updateData()
   }
 
   onSelectedMeasurement2($event: MeasurementType) {
     this.measType2 = $event
+    this.updateData()
   }
 }
