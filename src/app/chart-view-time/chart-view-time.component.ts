@@ -25,6 +25,7 @@ export class ChartViewTimeComponent implements OnInit {
   measDevice = this.devices[0];
 
   measType!: MeasurementType
+  measType2: MeasurementType|undefined = undefined
 
   constructor(private http: HttpClient, private iotService: IoTService) {
   }
@@ -53,21 +54,20 @@ export class ChartViewTimeComponent implements OnInit {
 
   onMeasDate($event: Date) {
     this.measDate = this.pipe.transform($event, 'yyyyMMdd') ?? "";
-    // this.iotService.getMeasurements(this.measDevice, this.measDate)
-    //   .subscribe(data => this.measurements = data);
     this.readMeasurements()
   }
 
   onSelectedDevice($event: string) {
     console.log("device change: ", $event)
     this.measDevice = $event
-    // this.iotService.getMeasurements(this.measDevice, this.measDate)
-    //   .subscribe(data => this.measurements = data);
     this.readMeasurements()
   }
 
   onSelectedMeasurement($event: MeasurementType) {
-    //console.log("meas change: ", $event)
     this.measType = $event
+  }
+
+  onSelectedMeasurement2($event: MeasurementType) {
+    this.measType2 = $event
   }
 }

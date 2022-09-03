@@ -4,12 +4,15 @@
     <app-chart-menu [devices]="devices" [measurements]="measTypes"
                     (selectedDevice)="onSelectedDevice($event)"
                     (measDate)="onMeasDate($event)"
-                    (selectedMeasurement)="onSelectedMeasurement($event)">
+                    (selectedMeasurement)="onSelectedMeasurement($event)"
+                    (selectedMeasurement2)="onSelectedMeasurement2($event)">
     </app-chart-menu>
   </div>
+
   <div class="col2">
     <app-time-chart [measurements]="measurements"
-                    [measurementType]="measType">
+                    [measurementType]="measType"
+                    [measurementType2]="measType2">
     </app-time-chart>
   </div>
 </div>

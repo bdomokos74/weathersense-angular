@@ -27,6 +27,16 @@
     </mat-form-field>
   </div>
 
+  <mat-form-field class="form-full-width" appearance="fill">
+    <mat-label>Measurement2</mat-label>
+    <mat-select [(ngModel)]="_selectedMeasurement2">
+      <mat-option value=""></mat-option>
+      <mat-option *ngFor="let m of measurements" [value]="m">
+        {{m.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
   <div>
     {{_measDate.getRawValue()}}, {{_selectedDevice}}
   </div>

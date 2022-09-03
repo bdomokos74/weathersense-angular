@@ -44,7 +44,16 @@ export class ChartMenuComponent implements OnInit {
   @Output()
   selectedMeasurement = new EventEmitter<MeasurementType>();
 
-
+  selectedMeasurementVal2: MeasurementType|undefined = undefined
+  get _selectedMeasurement2() {
+    return this.selectedMeasurementVal2
+  }
+  set _selectedMeasurement2(value) {
+    this.selectedMeasurementVal2 = value
+    this.selectedMeasurement2.emit(this.selectedMeasurementVal2);
+  }
+  @Output()
+  selectedMeasurement2 = new EventEmitter<MeasurementType>();
 
   ngOnInit(): void {
     this._selectedDevice = this.devices[0]

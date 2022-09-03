@@ -2,7 +2,7 @@ import {Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@an
 import {Measurement} from "../../measurement";
 import * as d3 from 'd3';
 import {MeasurementType} from "../../measurement-type";
-
+import {TimeSeries, Range} from "../../timeseries";
 
 @Component({
   selector: 'app-time-chart',
@@ -19,6 +19,7 @@ export class TimeChartComponent implements OnInit {
 
   _measurements: Measurement[] = [];
   _measType!: MeasurementType;
+  _measType2: MeasurementType|undefined;
 
   @ViewChild('svgcontainer') container! : ElementRef;
 
@@ -42,14 +43,31 @@ export class TimeChartComponent implements OnInit {
     return this._measurements;
   }
 
-
   @Input()
   set measurementType(value: MeasurementType) {
     this._measType = value
+    if (this.viewInited) {
+      this.draw();
+    } else {
+      this.outstandingData = true;
+    }
     console.log("meas change", value)
   }
   get measurementType() {
     return this._measType
+  }
+
+  @Input()
+  set measurementType2(value: MeasurementType|undefined) {
+    this._measType2 = value
+    if (this.viewInited) {
+      this.draw();
+    } else {
+      this.outstandingData = true;
+    }
+  }
+  get measurementType2() {
+    return this._measType2
   }
 
 
@@ -57,7 +75,6 @@ export class TimeChartComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
 
   ngAfterViewInit(): void {
     console.log("ngAfterViewInit", this.container);
@@ -85,86 +102,140 @@ export class TimeChartComponent implements OnInit {
         .attr("width", width)
         .attr("height", height);
 
-    console.log("svg", svg);
     this.width = +svg.attr("width") - this.margin.left - this.margin.right;
     this.height = +svg.attr("height") - this.margin.top - this.margin.bottom;
 
-    console.log(`draw num meas:${this._measurements.length}, w=${this.width}, h=${this.height}`);
+    const xRange:Range = {min: this.margin.left, max:this.width - this.margin.right};
+    const yRange:Range = {min: this.height - this.margin.bottom, max: this.margin.top};
 
-    // this.svg.selectAll("*").remove();
+    console.log(`draw num meas:${this._measurements.length}, measType:${this._measType.name} w=${this.width}, h=${this.height}`);
 
-    let ts: any = (obj: any) => obj['ts'];
-    let t1: any = (obj: any) => obj['t1'];
-    let t2: any = (obj: any) => obj['t2'];
-    const X: any = d3.map(this._measurements, ts);
-    const Y1:any = d3.map(this._measurements, t1);
-    const Y2:any = d3.map(this._measurements, t2);
+    let leftSeries: TimeSeries[] = []
+    let rightSeries: TimeSeries[] = []
 
-    const defined = (d: any, i: any) => !isNaN(X[i]) && !isNaN(Y1[i])
-    // const D = d3.map(this._measurements, defined);
+    leftSeries.push( TimeSeries.createTimeSerie(this._measurements, 'ts', this._measType.code1, this._measType, "1"))
+    if( this._measType.code2) {
+      let serie2 = TimeSeries.createTimeSerie(this._measurements, 'ts', this._measType.code2, this._measType, "1_1");
+      if(!serie2.empty)
+        leftSeries.push(serie2)
+    }
 
-    const xRange = [this.margin.left, this.width - this.margin.right];
-    const yRange = [this.height - this.margin.bottom, this.margin.top];
+    if(this._measType2) {
+      rightSeries.push( TimeSeries.createTimeSerie(this._measurements, 'ts', this._measType2.code1, this._measType2, "2"))
+      if( this._measType2.code2) {
+        let serie2 = TimeSeries.createTimeSerie(this._measurements, 'ts', this._measType2.code2, this._measType2, "2_1");
+        if(!serie2.empty)
+          rightSeries.push(serie2)
+      }
+    }
+
 
     // Compute default y-domain.
-    const xDomain: any = d3.extent(X);
-    let yDomain1: any = d3.extent(Y1);
-    let yDomain2: any = d3.extent(Y2);
-    console.log("ydomains:", yDomain1, yDomain2)
-
-    let yDomain
-    if(yDomain1[0]==undefined) {
-      yDomain1 = yDomain2
-    } else if(yDomain2[0]==undefined) {
-        yDomain2 = yDomain1
+    let xDomain = [Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY]
+    let yDomainLeft = [Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY]
+    let yDomainRight = [Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY]
+    for (const s of leftSeries) {
+      console.log(`${s.code}: ${s.xDomain}`)
+      xDomain[0] = Math.min(xDomain[0], s.xDomain[0])
+      xDomain[1] = Math.max(xDomain[1], s.xDomain[1])
+      yDomainLeft[0] = Math.min(yDomainLeft[0], s.yDomain[0])
+      yDomainLeft[1] = Math.max(yDomainLeft[1], s.yDomain[1])
     }
-    yDomain = [Math.min(yDomain1[0], yDomain2[0]), Math.max(yDomain1[1], yDomain2[1])];
-    yDomain[0] = Math.min(yDomain[0], 10)
-    console.log("ydomain:", yDomain)
+    yDomainLeft[0] = Math.min(yDomainLeft[0], 10)
+    console.log("ydomain:", yDomainLeft)
 
-    // Construct scales and axes.
-    const xScale = d3.scaleTime().domain(xDomain).range(xRange);//.interpolate(d3.interpolateRound);
-    const yScale = d3.scaleLinear().domain(yDomain).range(yRange);
+    for (const s of rightSeries) {
+      xDomain[0] = Math.min(xDomain[0], s.xDomain[0])
+      xDomain[1] = Math.max(xDomain[1], s.xDomain[1])
+      yDomainRight[0] = Math.min(yDomainRight[0], s.yDomain[0])
+      yDomainRight[1] = Math.max(yDomainRight[1], s.yDomain[1])
+    }
 
-    let line: any = d3.line()
-      .defined(defined)
-      // .curve(curve)
-      .x(d => xScale(ts(d)))
-      .y(d => yScale(t1(d)));
+    if(rightSeries.length>0) {
+      yDomainRight[0] = Math.min(yDomainRight[0], 10)
+    }
 
-    let line2:any = d3.line()
-      .defined(defined)
-      // .curve(curve)
-      .x(d => xScale(ts(d)))
-      .y(d => yScale(t2(d)));
+    const xScale = d3.scaleTime().domain(xDomain).range([xRange.min, xRange.max]);//.interpolate(d3.interpolateRound);
+    const yScaleLeft = d3.scaleLinear().domain(yDomainLeft).range([yRange.min, yRange.max]);
+    const yScaleRight = d3.scaleLinear().domain(yDomainRight).range([yRange.min, yRange.max]);
+
+    for (const s of leftSeries) {
+      s.setScales(xScale, yScaleLeft)
+    }
+    for (const s of rightSeries) {
+      s.setScales(xScale, yScaleRight)
+    }
+
+    this.createAxisX(svg, xScale);
+    this.createAxisY(svg, yScaleLeft, leftSeries[0].type.name, leftSeries[0].type.unit);
+    if(rightSeries.length>0) {
+      this.createAxisYRight(svg, yScaleRight, rightSeries[0].type.name, rightSeries[0].type.unit);
+    }
+    this.createTimeLine(svg, xScale)
+
+    let i = 1
+    for (const s of leftSeries) {
+      this.addLineGraph(svg, s, i++)
+    }
+    for (const s of rightSeries) {
+      this.addLineGraph(svg, s, i++)
+    }
+  }
+
+  private addLineGraph(svg: any, s: TimeSeries, num: number) {
+    svg.append("path")
+      .data([this._measurements])
+      .attr("class", "line m"+s.color)
+      .attr("d", s.getLineMethod())
+  }
+
+  private createAxisX(svg: any, xScale: any) {
+    const xAxis = d3.axisBottom(xScale).ticks(this.width / 80, "%H:%M:%S").tickSizeOuter(0);
+
+    svg.append("g")
+      .attr("class", "x-axis")
+      .attr("transform", `translate(0, ${this.height - this.margin.bottom})`)
+      .call(xAxis);
+
+    svg.append("text")
+      .attr("x", this.width / 2)
+      .attr("y", this.height + 1.5*this.margin.bottom)
+      .style("text-anchor", "middle")
+      .text("Measurement Time");
+  }
 
 
-      const xAxis = d3.axisBottom(xScale).ticks(this.width / 80, "%H:%M:%S").tickSizeOuter(0);
-      const yAxis = d3.axisLeft(yScale).ticks(null, "");
+  private createAxisY(svg: any, yScale: any, label: string, unit: string) {
+    const yAxis = d3.axisLeft(yScale).ticks(10, ".1f");
+    svg.append("g")
+      .attr("transform", `translate(${this.margin.left},0)`)
+      .call(yAxis);
 
-      svg.append("g")
-        .attr("class", "x-axis")
-        .attr("transform", `translate(0, ${this.height - this.margin.bottom})`)
-        .call(xAxis);
+    svg.append("text")      // text label for the y-axis
+      // .attr("data-test", "y-title")
+      .attr("y", this.margin.left/2)
+      .attr("x", 0)
+      .attr("transform", "rotate(-90)")
+      .style("text-anchor", "end")
+      .text(`${label} (${unit})`);
+  }
 
-      svg.append("text")
-        .attr("x", this.width / 2)
-        .attr("y", this.height + 1.5*this.margin.bottom)
-        .style("text-anchor", "middle")
-        .text("Measurement Time");
+  private createAxisYRight(svg: any, yScale: any, label: string, unit: string) {
+    const yAxis = d3.axisRight(yScale).ticks(10, ".0f");
+    svg.append("g")
+      .attr("transform", `translate(${this.width+this.margin.right},0)`)
+      .call(yAxis);
 
-      svg.append("g")
-        .attr("transform", `translate(${this.margin.left},0)`)
-        .call(yAxis);
+    svg.append("text")      // text label for the y-axis
+      // .attr("data-test", "y-title")
+      .attr("y", this.width+this.margin.left)
+      .attr("x", 0)
+      .attr("transform", "rotate(-90)")
+      .style("text-anchor", "end")
+      .text(`${label} (${unit})`);
+  }
 
-      svg.append("text")      // text label for the y-axis
-        // .attr("data-test", "y-title")
-        .attr("y", 120 - this.margin.left)
-        .attr("x", 50 - (this.height / 2))
-        .attr("transform", "rotate(-90)")
-        .style("text-anchor", "end")
-        .text("t1 (°C)");
-
+  private createTimeLine(svg: any, xScale: any) {
     let currTime = new Date();
     let currX = xScale(currTime);
 
@@ -177,27 +248,6 @@ export class TimeChartComponent implements OnInit {
       .style("stroke-width", 0.5)
       .style("stroke", "lightgreen")
       .style("fill", "none");
-
-
-    if(this.measurements[0].t1) {
-      svg.append("path")
-        .data([this._measurements])
-        .attr("class", "line m1")
-        .attr("d", line)
-        .style("stroke-width", 0.5)
-        .style("stroke", "currentcolor")
-        .style("fill", "none");
-    }
-
-    if(this.measurements[0].t2) {
-      svg.append("path")
-        .data([this._measurements])
-        .attr("class", "line m3")
-        .attr("d", line2)
-        .style("stroke-width", 0.5)
-        .style("stroke", "lightblue")
-        .style("fill", "none");
-    }
   }
 
 }

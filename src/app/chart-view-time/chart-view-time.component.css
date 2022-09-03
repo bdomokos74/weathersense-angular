@@ -18,3 +18,118 @@
   flex-direction: column;
   flex-basis: 80%;
 }
+
+
+
+
+
+
+
+
+/deep/ .line {
+  fill: none;
+  stroke: gray;
+  stroke-width: 0.6px;
+}
+
+.badge-sensor1 {
+  background-color: #fbb4ae;
+}
+.line.m1 {
+  fill: none;
+  stroke: #fbb4ae;
+  stroke-width: 2px;
+}
+.circle.m1 {
+  fill: #fbb4ae;
+  /* stroke-width: 2px; */
+}
+
+
+/deep/ .badge-sensor1 {
+  background-color: #F5D3B4FF;
+}
+/deep/ .line.m1 {
+  fill: none;
+  stroke: #F5D3B4FF;
+  stroke-width: 0.8px;
+}
+/deep/ .circle.m1 {
+  fill: #F5D3B4FF;
+  /* stroke-width: 2px; */
+}
+
+/deep/ .badge-sensor1_1 {
+  background-color: #f5a5a0;
+}
+/deep/ .line.m1_1 {
+  fill: none;
+  stroke: #f5a5a0;
+  stroke-width: 0.8px;
+}
+/deep/ .circle.m1_1 {
+  fill: #f5a5a0;
+  /* stroke-width: 2px; */
+}
+
+
+
+/deep/ .badge-sensor2 {
+  background-color: rgb(97, 152, 198);
+}
+/deep/ .line.m2 {
+  fill: none;
+  stroke: rgb(97, 152, 198);
+  stroke-width: 1px;
+}
+/deep/ .circle.m2 {
+  fill: rgb(97, 152, 198);
+  /* stroke-width: 2px; */
+}
+
+/deep/ .badge-sensor2_1 {
+  background-color: #59819DFF;
+}
+/deep/ .line.m2_1 {
+  fill: none;
+  stroke: #59819DFF;
+  stroke-width: 1px;
+}
+/deep/ .circle.m2_1 {
+  fill: #59819DFF;
+  /* stroke-width: 2px; */
+}
+
+
+
+
+
+/deep/ .badge-sensor3 {
+  background-color: #d273afcf;
+}
+/deep/ .circle.m3 {
+  fill: #d273afcf;;
+  /* stroke-width: 2px; */
+}
+/deep/ .line.m3 {
+  fill: none;
+  stroke: #d273afcf;
+  stroke-width: 2px;
+}
+
+/deep/ .badge-sensor4 {
+  background-color: #73d286ee;
+}
+/deep/ .circle.m4 {
+  fill: #73d286ee;;
+  /* stroke-width: 2px; */
+}
+/deep/ .line.m4 {
+  fill: none;
+  stroke: #73d286ee;
+  stroke-width: 2px;
+}
+
+/*
+https://stackoverflow.com/questions/36214546/styles-in-component-for-d3-js-do-not-show-in-angular-2/36214723#36214723
+ */
