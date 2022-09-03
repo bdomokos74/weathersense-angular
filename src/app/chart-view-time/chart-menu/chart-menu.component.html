@@ -2,6 +2,13 @@
   <div class="p-2">
 
     <mat-form-field class="form-full-width" appearance="fill">
+      <mat-label>MM/DD/YYYY</mat-label>
+      <input matInput [matDatepicker]="picker" [formControl]="_measDate" (dateChange)="onDateChage($event)">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field class="form-full-width" appearance="fill">
       <mat-label>Device</mat-label>
       <mat-select [(ngModel)]="_selectedDevice">
         <mat-option *ngFor="let d of devices" [value]="d">
@@ -11,12 +18,13 @@
     </mat-form-field>
 
     <mat-form-field class="form-full-width" appearance="fill">
-      <mat-label>MM/DD/YYYY</mat-label>
-      <input matInput [matDatepicker]="picker" [formControl]="_measDate" (dateChange)="onDateChage($event)">
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
+      <mat-label>Measurement</mat-label>
+      <mat-select [(ngModel)]="_selectedMeasurement">
+        <mat-option *ngFor="let m of measurements" [value]="m">
+          {{m.name}}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
-
   </div>
 
   <div>

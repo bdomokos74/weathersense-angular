@@ -1,15 +1,8 @@
-import {Component, Directive, ElementRef, HostListener, Input, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
 import {Measurement} from "../../measurement";
 import * as d3 from 'd3';
+import {MeasurementType} from "../../measurement-type";
 
-
-/*
-@Directive({selector: 'svg-container'})
-export class SvgContainer {
-  @Input() id!: string;
-  @Input() offsetWidth!: string;
-}
-*/
 
 @Component({
   selector: 'app-time-chart',
@@ -17,8 +10,6 @@ export class SvgContainer {
   styleUrls: ['./time-chart.component.css']
 })
 export class TimeChartComponent implements OnInit {
-  // changeLog: string[] = [];
-  //private svg!: any;
   private margin = {top: 45, bottom: 15, left: 85, right: 20};
   private width: number = 0;
   private height: number = 0;
@@ -27,6 +18,7 @@ export class TimeChartComponent implements OnInit {
   private outstandingData: boolean = false;
 
   _measurements: Measurement[] = [];
+  _measType!: MeasurementType;
 
   @ViewChild('svgcontainer') container! : ElementRef;
 
@@ -47,39 +39,25 @@ export class TimeChartComponent implements OnInit {
       }
   }
   get measurements(): Measurement[] {
-
     return this._measurements;
-
   }
+
+
+  @Input()
+  set measurementType(value: MeasurementType) {
+    this._measType = value
+    console.log("meas change", value)
+  }
+  get measurementType() {
+    return this._measType
+  }
+
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
-  /*
-  ngOnChanges(changes: SimpleChanges) {
-
-    for (const propName in changes) {
-      const changedProp = changes[propName];
-      const to = JSON.stringify(changedProp.currentValue);
-
-      //if (changedProp.isFirstChange()) {
-      console.log("change", propName);
-      console.log(this.measurements);
-      //this.draw();
-      // }
-      if(!this.viewInited) {
-        console.log("view not inited yet");
-      }
-      if(this.viewInited && !this.drawCalled) {
-        this.draw();
-        this.drawCalled = true;
-      }
-      this.dataReceived = true;
-    }
-  }
-*/
 
   ngAfterViewInit(): void {
     console.log("ngAfterViewInit", this.container);
@@ -92,7 +70,7 @@ export class TimeChartComponent implements OnInit {
   }
 
   private draw(): void {
-  console.log("calling draw");
+    console.log("calling draw");
     const width = this.container.nativeElement.offsetWidth;
     const height = 960;
     console.log(`container id: ${this.container.nativeElement}`)
@@ -106,8 +84,6 @@ export class TimeChartComponent implements OnInit {
     const svg = svgContainer.append("svg:svg")
         .attr("width", width)
         .attr("height", height);
-        // .attr("viewBox", [0, 0, width, height])
-        // .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
 
     console.log("svg", svg);
     this.width = +svg.attr("width") - this.margin.left - this.margin.right;
@@ -125,7 +101,7 @@ export class TimeChartComponent implements OnInit {
     const Y2:any = d3.map(this._measurements, t2);
 
     const defined = (d: any, i: any) => !isNaN(X[i]) && !isNaN(Y1[i])
-    const D = d3.map(this._measurements, defined);
+    // const D = d3.map(this._measurements, defined);
 
     const xRange = [this.margin.left, this.width - this.margin.right];
     const yRange = [this.height - this.margin.bottom, this.margin.top];
@@ -150,16 +126,6 @@ export class TimeChartComponent implements OnInit {
     const xScale = d3.scaleTime().domain(xDomain).range(xRange);//.interpolate(d3.interpolateRound);
     const yScale = d3.scaleLinear().domain(yDomain).range(yRange);
 
-    //const color = d3.scaleOrdinal(zDomain, colors);
-
-    // const xAxis = d3.axisBottom(xScale).ticks(this.width / 80, xFormat).tickSizeOuter(0);
-    // const yAxis = d3.axisLeft(yScale).ticks(null, yFormat);
-
-    // Construct formats.
-    // formatDate = xScale.tickFormat(null, formatDate);
-
-
-
     let line: any = d3.line()
       .defined(defined)
       // .curve(curve)
@@ -172,9 +138,6 @@ export class TimeChartComponent implements OnInit {
       .x(d => xScale(ts(d)))
       .y(d => yScale(t2(d)));
 
-    //console.log(line(this.measurements[0]));
-
-      //const axisBottom: any = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%H:%M:%S"));
 
       const xAxis = d3.axisBottom(xScale).ticks(this.width / 80, "%H:%M:%S").tickSizeOuter(0);
       const yAxis = d3.axisLeft(yScale).ticks(null, "");
@@ -202,11 +165,6 @@ export class TimeChartComponent implements OnInit {
         .style("text-anchor", "end")
         .text("t1 (°C)");
 
-      // svg
-      // .append("g")
-      // .attr("transform", "translate(" + this.margin + "," + this.margin + ")");
-
-
     let currTime = new Date();
     let currX = xScale(currTime);
 
@@ -215,7 +173,7 @@ export class TimeChartComponent implements OnInit {
       .attr('x1', currX)
       .attr('y1', this.height - this.margin.top)
       .attr('x2', currX)
-      .attr('y2', 0 + this.margin.top)
+      .attr('y2', this.margin.top)
       .style("stroke-width", 0.5)
       .style("stroke", "lightgreen")
       .style("fill", "none");

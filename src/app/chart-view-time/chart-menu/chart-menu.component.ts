@@ -1,6 +1,7 @@
 import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
 import {FormControl} from "@angular/forms";
 import * as moment from 'moment';
+import {MeasurementType} from "../../measurement-type";
 
 @Component({
   selector: 'app-chart-menu',
@@ -10,7 +11,15 @@ import * as moment from 'moment';
 export class ChartMenuComponent implements OnInit {
   constructor() { }
 
+  @Input()
+  devices!: string[]
+
+  @Input()
+  measurements!: MeasurementType[]
+
   _measDate = new FormControl(new Date());
+  @Output()
+  measDate = new EventEmitter<Date>();
 
   selectedDeviceVal!: string;
   get _selectedDevice() {
@@ -20,18 +29,26 @@ export class ChartMenuComponent implements OnInit {
     this.selectedDeviceVal = value;
     this.selectedDevice.emit(this.selectedDeviceVal);
   }
-
-  @Input()
-  devices!: string[]
-
-  @Output()
-  measDate = new EventEmitter<Date>();
-
   @Output()
   selectedDevice = new EventEmitter<string>();
 
+
+  selectedMeasurementVal!: MeasurementType
+  get _selectedMeasurement() {
+    return this.selectedMeasurementVal
+  }
+  set _selectedMeasurement(value) {
+    this.selectedMeasurementVal = value
+    this.selectedMeasurement.emit(this.selectedMeasurementVal);
+  }
+  @Output()
+  selectedMeasurement = new EventEmitter<MeasurementType>();
+
+
+
   ngOnInit(): void {
     this._selectedDevice = this.devices[0]
+    this._selectedMeasurement = this.measurements[0]
   }
 
   onDateChage($event: any) {
@@ -40,7 +57,7 @@ export class ChartMenuComponent implements OnInit {
   }
 
   @HostListener('document:keydown', ['$event'])
-  doSomething(event: any) {
+  changeDateHotkey(event: any) {
     let change: number|undefined = undefined
     if (event.key === 'ArrowLeft') {
       change = -1
