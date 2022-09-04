@@ -26,9 +26,13 @@ const routes = [
     canActivate: [MsalGuard]
   },
   {
-    path: 'chart-view-time',
-    component: ChartViewTimeComponent,
+    path: 'chart-view-device',
+    component: ChartViewDeviceComponent,
     canActivate: [MsalGuard]
+  },
+  {
+    path: 'experiment',
+    component: ChartExperimentComponent
   },
 ];
 
@@ -57,15 +61,17 @@ import {
   MSAL_INTERCEPTOR_CONFIG,
   MsalGuardConfiguration,
 } from '@azure/msal-angular';
-import { ChartViewTimeComponent } from './chart-view-time/chart-view-time.component';
-import { ChartMenuComponent } from './chart-view-time/chart-menu/chart-menu.component';
-import {TimeChartComponent} from './chart-view-time/time-chart/time-chart.component';
+import {ChartViewDeviceComponent} from './chart-view-device/chart-view-device.component';
+import { ChartMenuComponent } from './chart-view-device/chart-menu/chart-menu.component';
+import {TimeChartComponent} from './time-chart/time-chart.component';
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
 import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { SerieCardComponent } from './chart-legend/serie-card/serie-card.component';
+import { ChartExperimentComponent } from './chart-experiment/chart-experiment.component';
+import {MatButtonModule} from "@angular/material/button";
 
 export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication({
@@ -124,10 +130,11 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
     ChartLegendComponent,
     DeviceViewComponent,
     ProfileComponent,
-    ChartViewTimeComponent,
+    ChartViewDeviceComponent,
     ChartMenuComponent,
     TimeChartComponent,
-    SerieCardComponent
+    SerieCardComponent,
+    ChartExperimentComponent
   ],
   imports: [
     BrowserModule,
@@ -143,7 +150,8 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
     MatNativeDateModule,
     MatSelectModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    MatButtonModule
   ],
   providers: [
     {

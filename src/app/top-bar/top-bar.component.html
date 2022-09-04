@@ -1,5 +1,5 @@
 <mat-toolbar>
-  <button mat-icon-button class="white md-36" aria-label="Weathersense menu">
+  <button class="white md-36" aria-label="Weathersense menu">
     <mat-icon>menu</mat-icon>
   </button>
 
@@ -9,25 +9,27 @@
     </a>
   </span>
 
-  <button mat-icon-button class="white md-36" aria-label="Thermostat charts">
+  <button class="white md-36" aria-label="Thermostat charts">
     <a [routerLink]="['/device-view']">
       <mat-icon>thermostat</mat-icon>
     </a>
   </button>
-  <button mat-icon-button class="white md-36" aria-label="Charts">
-    <a [routerLink]="['/chart-view-time']">
+  <button class="white md-36" aria-label="Charts">
+    <a [routerLink]="['/chart-view-device']">
       <mat-icon>insert_chart_outlined</mat-icon>
     </a>
   </button>
   <span class="row-middle"></span>
 
-  <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+  <button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
     <mat-icon>candlestick_chart</mat-icon>
   </button>
-  <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
-    <mat-icon>insights</mat-icon>
+  <button class="example-icon" aria-label="Example icon-button with share icon">
+    <a [routerLink]="['/experiment']">
+      <mat-icon>insights</mat-icon>
+    </a>
   </button>
-  <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+  <button class="example-icon" aria-label="Example icon-button with share icon">
     <a [routerLink]="['/profile']">
       <mat-icon>account_circle</mat-icon>
     </a>

@@ -8,11 +8,11 @@ import {TimeSeries} from "../timeseries";
 import {ChartData} from "../chart-data";
 
 @Component({
-  selector: 'app-chart-view-time',
-  templateUrl: './chart-view-time.component.html',
-  styleUrls: ['./chart-view-time.component.css']
+  selector: 'app-chart-view-device',
+  templateUrl: './chart-view-device.component.html',
+  styleUrls: ['./chart-view-device.component.css']
 })
-export class ChartViewTimeComponent implements OnInit {
+export class ChartViewDeviceComponent implements OnInit {
   pipe = new DatePipe('en-US');
   private fmt: string = 'yyyyMMdd';
 
