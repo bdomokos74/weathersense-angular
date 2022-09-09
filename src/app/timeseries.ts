@@ -22,7 +22,8 @@ export class TimeSeries {
     defined: any,
     code: string,
     empty: boolean,
-    color: string
+    color: string,
+    measData: Measurement[]
   )
   {
     this.source = source;
@@ -38,9 +39,12 @@ export class TimeSeries {
     this.xScale = undefined
     this.yScale = undefined
     this.code = code
+    this.measData = measData
   }
   private xScale: any;
   private yScale: any;
+
+  measData: Measurement[]|undefined
 
   type: MeasurementType
   xDomain: number[]
@@ -62,8 +66,8 @@ export class TimeSeries {
     let yMapper: any = (obj: any) => obj[code];
 
     const X: number[] = d3.map(measData, tsMapper);
-    const Y: number[] = d3.map(measData, yMapper);
 
+    const Y: number[] = d3.map(measData, yMapper);
 
     const defined = (d: any, i: any) => X[i]!==undefined && Y[i]!==undefined && !isNaN(Y[i])
 
@@ -76,10 +80,13 @@ export class TimeSeries {
     // const yScale = d3.scaleLinear().domain(yDomain).range([yRange.min, yRange.max]);
 
     let empty = Y.filter( (item: any) => item!=undefined).length==0
-    let result = new TimeSeries(source, type, xDomain, yDomain, tsMapper, yMapper, defined, code, empty, color);
+
+    let result = new TimeSeries(source, type, xDomain, yDomain, tsMapper, yMapper, defined, code, empty, color, measData);
+    if(empty) return result
 
     let maxIndex = d3.maxIndex(Y)
     let minIndex = d3.minIndex(Y)
+    console.log("y", Y)
     let yMin = Y[minIndex]
     let yMax = Y[maxIndex]
     let yCurr = Y[Y.length-1]

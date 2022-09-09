@@ -1,0 +1,22 @@
+<div class="row">
+  <div class="col1">
+    <app-chart-menu
+      [showDeviceSelect]="false"
+      [showMeasurement2Select]="false"
+      [measurements]="measTypes"
+
+      (measDate)="onMeasDate($event)"
+      (selectedMeasurement)="onSelectedMeasurement($event)">
+    </app-chart-menu>
+  </div>
+
+  <div class="col2">
+    <app-time-chart [chartData]="chartData">
+    </app-time-chart>
+  </div>
+
+  <div class="col3">
+    <app-chart-legend [chartData]="chartData">
+    </app-chart-legend>
+  </div>
+</div>

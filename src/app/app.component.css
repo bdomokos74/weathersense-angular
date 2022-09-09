@@ -1,0 +1,247 @@
+/deep/.row{
+  display:flex;
+  width: 100%;
+  /*flex:1;*/
+  flex-direction: row;
+}
+
+/deep/.col1{
+  display: flex;
+  flex-direction: column;
+  flex-basis: 10%;
+  /*flex: 1;*/
+  /*flex: 30%;*/
+}
+
+/deep/.col2{
+  display: flex;
+  flex-direction: column;
+  flex-basis: 80%;
+}
+
+/deep/.col3 {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 10%;
+}
+
+
+/* chart styles */
+:host {
+  --meas-color-default: gray;
+  --meas-color-1: #59819dff;
+  --meas-color-1-1: #6198c6ff;
+  --meas-color-2: #f5a5a0;
+  --meas-color-2-1: #f5d3b4ff;
+  --meas-color-3: rgba(250, 52, 160, 0.81);
+  --meas-color-3-1: rgba(253, 132, 204, 0.81);
+  --meas-color-4: #73d286ee;
+  --meas-color-4-1: rgba(100, 224, 126, 0.93);
+}
+
+/*
+/deep/ .line {
+  fill: none;
+  stroke: var(--meas-color-default);
+  stroke-width: 0.6px;
+}
+
+.badge-sensor1 {
+  background-color: var(--meas-color-default);
+}
+.line.m1 {
+  fill: none;
+  stroke: var(--meas-color-default);
+  stroke-width: 2px;
+}
+.circle.m1 {
+  fill: var(--meas-color-default);
+
+}
+
+*/
+
+
+/deep/.badge-sensor1 {
+  background-color: var(--meas-color-1);
+}
+/deep/ div.badge-border1 {
+  border-color: var(--meas-color-1) !important;
+}
+/deep/ .line.m1 {
+  fill: none;
+  stroke: var(--meas-color-1);
+  stroke-width: 1px;
+}
+/deep/ .circle.m1 {
+  fill: var(--meas-color-1);
+  /* stroke-width: 2px; */
+}
+/deep/ .meas-bg-col1 {
+  background-color: var(--meas-color-1);
+}
+/deep/ .meas-col1 {
+  color: var(--meas-color-1);
+}
+
+
+/deep/.badge-sensor1_1 {
+  background-color: var(--meas-color-1-1);
+}
+/deep/ div.badge-border1_1 {
+  border-color: var(--meas-color-1-1) !important;
+}
+/deep/ .line.m1_1 {
+  fill: none;
+  stroke:  var(--meas-color-1-1);
+  stroke-width: 1px;
+}
+/deep/ .circle.m1_1 {
+  fill:  var(--meas-color-1-1);
+  /* stroke-width: 2px; */
+}
+/deep/ .meas-bg-col1_1 {
+  background-color: var(--meas-color-1-1);
+}
+/deep/ .meas-col1_1 {
+  color: var(--meas-color-1-1);
+}
+
+
+
+
+
+
+/deep/ .badge-sensor2 {
+  background-color: var(--meas-color-2);
+}
+/deep/.badge-border2 {
+  border-color: var(--meas-color-2);
+}
+/deep/ .line.m2 {
+  fill: none;
+  stroke: var(--meas-color-2);
+  stroke-width: 0.8px;
+}
+/deep/ .circle.m2 {
+  fill: var(--meas-color-2);
+  /* stroke-width: 2px; */
+}
+/deep/ .meas-bg-col2 {
+  background-color: var(--meas-color-2);
+}
+/deep/ .meas-col2 {
+  color: var(--meas-color-2);
+}
+
+
+/deep/ .badge-sensor2_1 {
+  background-color: var(--meas-color-2-1);
+}
+/deep/ .badge-border2_1 {
+  border-color: var(--meas-color-2-1);
+}
+/deep/ .line.m2_1 {
+  fill: none;
+  stroke: var(--meas-color-2-1);
+  stroke-width: 0.8px;
+}
+/deep/ .circle.m2_1 {
+  fill: var(--meas-color-2-1);
+  /* stroke-width: 2px; */
+}
+/deep/ .meas-bg-col2_1 {
+  background-color: var(--meas-color-2-1);
+}
+/deep/ .meas-col2_1 {
+  color: var(--meas-color-2-1);
+}
+
+
+
+
+
+/deep/ .badge-sensor3 {
+  background-color: var(--meas-color-3);
+}
+/deep/ .circle.m3 {
+  fill: var(--meas-color-3);
+  /* stroke-width: 2px; */
+}
+/deep/ .line.m3 {
+  fill: none;
+  stroke: var(--meas-color-3);
+  stroke-width: 1px;
+}
+/deep/ .meas-bg-col3 {
+  background-color: var(--meas-color-3);
+}
+/deep/ .meas-col3 {
+  color: var(--meas-color-3);
+}
+
+
+/deep/ .badge-sensor3_1 {
+  background-color: var(--meas-color-3-1);
+}
+/deep/ .circle.m3_1 {
+  fill: var(--meas-color-3-1);
+  /* stroke-width: 1px; */
+}
+/deep/ .line.m3_1 {
+  fill: none;
+  stroke: var(--meas-color-3-1);
+  stroke-width: 1px;
+}
+/deep/ .meas-bg-col3_1 {
+  background-color: var(--meas-color-3-1);
+}
+/deep/ .meas-col3_1 {
+  color: var(--meas-color-3-1);
+}
+
+
+
+
+
+/deep/ .badge-sensor4 {
+  background-color: var(--meas-color-4);
+}
+/deep/ .circle.m4 {
+  fill: var(--meas-color-4);
+  /* stroke-width: 2px; */
+}
+/deep/ .line.m4 {
+  fill: none;
+  stroke: var(--meas-color-4);
+  stroke-width: 1px;
+}
+/deep/ .meas-bg-col4 {
+  background-color: var(--meas-color-4);
+}
+/deep/ .meas-col4 {
+  color: var(--meas-color-4);
+}
+
+/deep/ .badge-sensor4_1 {
+  background-color: var(--meas-color-4-1);
+}
+/deep/ .circle.m4_1 {
+  fill: var(--meas-color-4-1);
+  /* stroke-width: 1px; */
+}
+/deep/ .line.m4_1 {
+  fill: none;
+  stroke: var(--meas-color-4-1);
+  stroke-width: 1px;
+}
+/deep/ .meas-bg-col4_1 {
+  background-color: var(--meas-color-4-1);
+}
+/deep/ .meas-col4_1 {
+  color: var(--meas-color-4-1);
+}
+
+/*
+https://stackoverflow.com/questions/36214546/styles-in-component-for-d3-js-do-not-show-in-angular-2/36214723#36214723
+ */

@@ -8,7 +8,7 @@
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
-    <mat-form-field class="form-full-width" appearance="fill">
+    <mat-form-field *ngIf="showDeviceSelect" class="form-full-width" appearance="fill">
       <mat-label>Device</mat-label>
       <mat-select [(ngModel)]="_selectedDevice">
         <mat-option *ngFor="let d of devices" [value]="d">
@@ -27,7 +27,7 @@
     </mat-form-field>
   </div>
 
-  <mat-form-field class="form-full-width" appearance="fill">
+  <mat-form-field *ngIf="showMeasurement2Select"  class="form-full-width" appearance="fill">
     <mat-label>Measurement2</mat-label>
     <mat-select [(ngModel)]="_selectedMeasurement2">
       <mat-option value=""></mat-option>

@@ -1,7 +1,7 @@
 import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
 import {FormControl} from "@angular/forms";
 import * as moment from 'moment';
-import {MeasurementType} from "../../measurement-type";
+import {MeasurementType} from "../measurement-type";
 
 @Component({
   selector: 'app-chart-menu',
@@ -12,10 +12,31 @@ export class ChartMenuComponent implements OnInit {
   constructor() { }
 
   @Input()
-  devices!: string[]
+  showDeviceSelect: boolean = true;
 
   @Input()
-  measurements!: MeasurementType[]
+  showMeasurement2Select: boolean = true;
+
+  _devices: string[] = []
+  @Input()
+  get devices() {
+    return this._devices
+  }
+  set devices(devices) {
+    this._devices = devices
+    this._selectedDevice = this._devices[0]
+  }
+
+  _measurements: MeasurementType[] = []
+  @Input()
+  get measurements() {
+    return this._measurements;
+  }
+  set measurements(measurements) {
+    this._measurements = measurements
+    this._selectedMeasurement = this.measurements[0]
+  }
+
 
   _measDate = new FormControl(new Date());
   @Output()
@@ -55,9 +76,9 @@ export class ChartMenuComponent implements OnInit {
   @Output()
   selectedMeasurement2 = new EventEmitter<MeasurementType>();
 
+
   ngOnInit(): void {
-    this._selectedDevice = this.devices[0]
-    this._selectedMeasurement = this.measurements[0]
+
   }
 
   onDateChage($event: any) {

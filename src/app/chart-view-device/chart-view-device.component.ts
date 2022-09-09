@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
 import {Measurement} from "../measurement";
 import {IoTService} from "../iot.service";
 import {DatePipe} from "@angular/common";
@@ -19,11 +18,9 @@ export class ChartViewDeviceComponent implements OnInit {
   chartData: ChartData|undefined;
 
   measurements: Measurement[] = [];
-  devices = ['DOIT1', 'BME280-1', 'DALLAS1', 'ESP32-1']
-  measTypes: MeasurementType[] = [
-    {name: 'Temperature', code1: 't1', code2: 't2', unit: '°C'},
-    {name: 'Pressure', code1: 'p', code2: undefined, unit: 'hPa'},
-    {name: 'Humidity', code1: 'h', code2: undefined, unit: '%'}];
+
+  devices = this.iotService.getDevices()
+  measTypes: MeasurementType[] = this.iotService.getMeasurementTypes()
 
   measDate: string = this.pipe.transform(new Date(), this.fmt) ?? "";
   measDevice = this.devices[0];
@@ -31,7 +28,7 @@ export class ChartViewDeviceComponent implements OnInit {
   measType!: MeasurementType
   measType2: MeasurementType|undefined = undefined
 
-  constructor(private http: HttpClient, private iotService: IoTService) {
+  constructor(private iotService: IoTService) {
   }
 
   ngOnInit() {
@@ -44,25 +41,31 @@ export class ChartViewDeviceComponent implements OnInit {
     this.iotService.getMeasurements(this.measDevice, this.measDate)
       .subscribe(
         data => {
-          self.prepareData(data)
+          console.log("subs data:", data)
+          self.measurements = data
         },
         err => {
-          console.log("error:", err);
+          console.log("error:", err)
           self.measurements = []
         },
         () => {
-          console.log('done');
+          console.log('complete');
+          self.prepareData();
         }
       );
   }
 
   private updateData() {
-    let data = this.chartData?.measurements
-    if(data)
-      this.prepareData(data)
-
+    if(this.chartData) {
+      //this.measurements = this.chartData.measurements
+      this.prepareData()
+    } else {
+      //this.measurements = []
+    }
   }
-  private prepareData(data: Measurement[]) {
+
+  private prepareData() {
+    let data = this.measurements;
     let leftSeries: TimeSeries[] = []
     let rightSeries: TimeSeries[] = []
 
@@ -83,7 +86,6 @@ export class ChartViewDeviceComponent implements OnInit {
     }
 
     this.chartData = {
-      measurements: data,
       leftSeries: leftSeries,
       rightSeries: rightSeries
     }
@@ -109,4 +111,5 @@ export class ChartViewDeviceComponent implements OnInit {
     this.measType2 = $event
     this.updateData()
   }
+
 }

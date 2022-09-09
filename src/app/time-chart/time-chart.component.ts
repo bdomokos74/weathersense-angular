@@ -53,14 +53,14 @@ export class TimeChartComponent implements OnInit {
   }
 
   private draw(): void {
-    console.log("calling draw");
+    console.log("calling draw", this.chartData);
     const width = this.container.nativeElement.offsetWidth;
     const height = 960;
     console.log(`container id: ${this.container.nativeElement}`)
     const svgContainer = d3.select(".svg-container");
     svgContainer.selectAll("*").remove();
 
-    if(this.chartData===undefined ||this.chartData.measurements.length==0) {
+    if(this.chartData===undefined ||(this.chartData.leftSeries.length==0&&this.chartData.rightSeries.length==0)) {
       return
     }
 
@@ -74,7 +74,7 @@ export class TimeChartComponent implements OnInit {
     const xRange:Range = {min: this.margin.left, max:this.width - this.margin.right};
     const yRange:Range = {min: this.height - this.margin.bottom, max: this.margin.top};
 
-    console.log(`draw num meas:${this.chartData?.measurements.length}, w=${this.width}, h=${this.height}`);
+    console.log(`draw w=${this.width}, h=${this.height}`);
 
     let leftSeries: TimeSeries[] = []
     if(this.chartData.leftSeries) leftSeries = this.chartData.leftSeries
@@ -139,7 +139,7 @@ export class TimeChartComponent implements OnInit {
 
   private addLineGraph(svg: any, s: TimeSeries, num: number) {
     svg.append("path")
-      .data([this.chartData?.measurements])
+      .data([s.measData])
       .attr("class", "line m"+s.color)
       .attr("d", s.getLineMethod())
   }

@@ -19,11 +19,15 @@
       <mat-icon>insert_chart_outlined</mat-icon>
     </a>
   </button>
-  <span class="row-middle"></span>
 
   <button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
-    <mat-icon>candlestick_chart</mat-icon>
+    <a [routerLink]="['/chart-view-time']">
+      <mat-icon>candlestick_chart</mat-icon>
+    </a>
   </button>
+
+  <span class="row-middle"></span>
+
   <button class="example-icon" aria-label="Example icon-button with share icon">
     <a [routerLink]="['/experiment']">
       <mat-icon>insights</mat-icon>

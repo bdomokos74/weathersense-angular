@@ -31,6 +31,11 @@ const routes = [
     canActivate: [MsalGuard]
   },
   {
+    path: 'chart-view-time',
+    component: ChartViewTimeComponent,
+    canActivate: [MsalGuard]
+  },
+  {
     path: 'experiment',
     component: ChartExperimentComponent
   },
@@ -62,15 +67,16 @@ import {
   MsalGuardConfiguration,
 } from '@azure/msal-angular';
 import {ChartViewDeviceComponent} from './chart-view-device/chart-view-device.component';
-import { ChartMenuComponent } from './chart-view-device/chart-menu/chart-menu.component';
+import {ChartMenuComponent } from './chart-menu/chart-menu.component';
+import {ChartViewTimeComponent } from './chart-view-time/chart-view-time.component';
 import {TimeChartComponent} from './time-chart/time-chart.component';
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
 import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import { SerieCardComponent } from './chart-legend/serie-card/serie-card.component';
-import { ChartExperimentComponent } from './chart-experiment/chart-experiment.component';
+import {SerieCardComponent } from './chart-legend/serie-card/serie-card.component';
+import {ChartExperimentComponent } from './chart-experiment/chart-experiment.component';
 import {MatButtonModule} from "@angular/material/button";
 
 export function MSALInstanceFactory(): IPublicClientApplication {
@@ -121,8 +127,6 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
   };
 }
 
-
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -134,7 +138,9 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
     ChartMenuComponent,
     TimeChartComponent,
     SerieCardComponent,
-    ChartExperimentComponent
+    ChartExperimentComponent,
+    ChartViewDeviceComponent,
+    ChartViewTimeComponent
   ],
   imports: [
     BrowserModule,
