@@ -40,6 +40,7 @@ export class TimeSeries {
     this.yScale = undefined
     this.code = code
     this.measData = measData
+    this.visible = true
   }
   private xScale: any;
   private yScale: any;
@@ -59,7 +60,7 @@ export class TimeSeries {
   yMinTime: string|undefined
   yMaxTime: string|undefined
   yCurrTime: string|undefined
-
+  visible: boolean
 
   static createTimeSerie(source: string, measData: Measurement[], ts: string, code: string, type: MeasurementType, color: string) :TimeSeries {
     let tsMapper: any = (obj: any) => obj[ts];

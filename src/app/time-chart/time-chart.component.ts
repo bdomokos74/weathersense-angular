@@ -87,11 +87,13 @@ export class TimeChartComponent implements OnInit {
     let yDomainLeft = [Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY]
     let yDomainRight = [Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY]
     for (const s of leftSeries) {
-      console.log(`${s.code}: ${s.xDomain}`)
-      xDomain[0] = Math.min(xDomain[0], s.xDomain[0])
-      xDomain[1] = Math.max(xDomain[1], s.xDomain[1])
-      yDomainLeft[0] = Math.min(yDomainLeft[0], s.yDomain[0])
-      yDomainLeft[1] = Math.max(yDomainLeft[1], s.yDomain[1])
+      console.log(`${s.code}: ${s.xDomain}, visible:${s.visible}`)
+      if(s.visible) {
+        xDomain[0] = Math.min(xDomain[0], s.xDomain[0])
+        xDomain[1] = Math.max(xDomain[1], s.xDomain[1])
+        yDomainLeft[0] = Math.min(yDomainLeft[0], s.yDomain[0])
+        yDomainLeft[1] = Math.max(yDomainLeft[1], s.yDomain[1])
+      }
     }
 
     if(leftSeries.length>0 && leftSeries[0].type.name==='Temperature')
@@ -100,10 +102,12 @@ export class TimeChartComponent implements OnInit {
     console.log("ydomain:", yDomainLeft)
 
     for (const s of rightSeries) {
-      xDomain[0] = Math.min(xDomain[0], s.xDomain[0])
-      xDomain[1] = Math.max(xDomain[1], s.xDomain[1])
-      yDomainRight[0] = Math.min(yDomainRight[0], s.yDomain[0])
-      yDomainRight[1] = Math.max(yDomainRight[1], s.yDomain[1])
+      if(s.visible) {
+        xDomain[0] = Math.min(xDomain[0], s.xDomain[0])
+        xDomain[1] = Math.max(xDomain[1], s.xDomain[1])
+        yDomainRight[0] = Math.min(yDomainRight[0], s.yDomain[0])
+        yDomainRight[1] = Math.max(yDomainRight[1], s.yDomain[1])
+      }
     }
 
     if(rightSeries.length>0 && rightSeries[0].type.name==='Temperature') {
@@ -130,9 +134,11 @@ export class TimeChartComponent implements OnInit {
 
     let i = 1
     for (const s of leftSeries) {
+      if(s.visible)
       this.addLineGraph(svg, s, i++)
     }
     for (const s of rightSeries) {
+      if(s.visible)
       this.addLineGraph(svg, s, i++)
     }
   }
