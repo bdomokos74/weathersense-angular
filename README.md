@@ -8,11 +8,31 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The appli
 
 ## Code scaffolding
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Run `ng g component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
 ## Build
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+
+```
+ng build --configuration test
+ng build --prod
+```
+
+### Compressing and build
+
+```
+npm run build-compress
+```
+
+Also need to set Content-encoding of the zipped files to GZip
+
+```
+$result =  npm run build-compress
+$fileList = $result | jq '.[].Blob'
+az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n index.html
+...
+```
 
 ## Running unit tests
 
@@ -26,12 +46,30 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
 
+### How to deploy the SPA
+
+```
+# for prod:
+az storage blob upload-batch -s dist-compressed/weathersense-angular2 -d '$web' --account-name $AZURE_GUI_STORAGE_ACCOUNT
+
+# for test:
+az storage blob upload-batch -s dist/weathersense-angular2 -d '$web' --account-name $AZURE_GUI_TEST_STORAGE_ACCOUNT
+```
+
+
+### Add d3
+
+```
+npm install d3 && npm install @types/d3 --save-dev
+```
 
 ### Notes
 
 
 https://docs.microsoft.com/en-us/azure/active-directory/develop/msal-client-application-configuration
+
 https://docs.microsoft.com/en-us/azure/active-directory/develop/tutorial-v2-angular-auth-code
+
 https://mater`ial.angular.io/components/table/examples#table-http
 `
 
@@ -98,10 +136,5 @@ az ad app permission grant --id 5ee20736-5cc8-4466-acac-fe2062a9a1a7 --api 89d10
 }
 
 https://blog.memoryleek.co.uk/apim/azure/identity/2021/08/13/using-managed-identity-to-connect-to-azure-services-from-api-management.html
+
 https://docs.microsoft.com/en-us/azure/api-management/api-management-authentication-policies#ManagedIdentity
-
-### Add d3
-
-```
-npm install d3 && npm install @types/d3 --save-dev
-```

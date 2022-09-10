@@ -78,16 +78,14 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SerieCardComponent } from './chart-legend/serie-card/serie-card.component';
 import {ChartExperimentComponent } from './chart-experiment/chart-experiment.component';
 import {MatButtonModule} from "@angular/material/button";
+import {environment} from "../environments/environment";
 
 export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication({
     auth: {
-      // clientId: '6226576d-37e9-49eb-b201-ec1eeb0029b6', // Prod enviroment. Uncomment to use.
-      clientId: '5ee20736-5cc8-4466-acac-fe2062a9a1a7', // PPE testing environment
-      // authority: 'https://login.microsoftonline.com/common', // Prod environment. Uncomment to use.
-      //authority: 'https://login.microsoftonline.com', // PPE testing environment.
-      authority: 'https://login.microsoftonline.com/d1756ea2-2803-4365-8987-9bd9a3829494',
-      redirectUri: 'http://localhost:4200',
+      clientId: environment.clientId, // PPE testing environment
+      authority: `https://login.microsoftonline.com/${environment.tenantId}`,
+      redirectUri: environment.baseUrl,
       postLogoutRedirectUri: '/'
     },
     cache: {
@@ -106,10 +104,9 @@ export function MSALInstanceFactory(): IPublicClientApplication {
 
 export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
   const protectedResourceMap = new Map<string, Array<string>>();
-  // protectedResourceMap.set('https://graph.microsoft.com/v1.0/me', ['user.read']); // Prod environment. Uncomment to use.
   protectedResourceMap.set('https://graph.microsoft.com/v1.0/me', ['user.read']);
-  protectedResourceMap.set('http://localhost:4200/blob/weathersense-data', ['https://storage.azure.com/.default']);
-  protectedResourceMap.set('http://localhost:4200/hub/devices', ['https://iothubs.azure.net/.default']);
+  protectedResourceMap.set(`${environment.blobUrl}/weathersense-data`, ['https://storage.azure.com/.default']);
+  protectedResourceMap.set(`${environment.iotHubUrl}/devices`, ['https://iothubs.azure.net/.default']);
 
   return {
     interactionType: InteractionType.Popup,

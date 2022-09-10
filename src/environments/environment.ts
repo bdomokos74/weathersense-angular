@@ -3,7 +3,16 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+
+  baseUrl: 'http://localhost:4200',
+  blobUrl: 'https://weathersensestorage.blob.core.windows.net',
+  iotHubUrl: 'https://weathersensehub.azure-devices.net',
+
+  tenantId: 'd1756ea2-2803-4365-8987-9bd9a3829494',
+  clientId: '5ee20736-5cc8-4466-acac-fe2062a9a1a7',
+
+  devices: ['DOIT1', 'BME280-1', 'DALLAS1', 'ESP32-1'],
 };
 
 /*

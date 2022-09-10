@@ -3,10 +3,11 @@ import {HttpClient} from "@angular/common/http";
 import {Observable, of} from "rxjs";
 import {Measurement} from "./measurement";
 import {MeasurementType} from "./measurement-type";
+import {environment} from "../environments/environment";
 
 @Injectable({providedIn: 'root'})
 export class IoTService {
-  private measurementUrl = '/blob/weathersense-data/';
+  private measurementUrl = '/weathersense-data/';
   private headers = {"x-ms-version": "2020-04-08"};
 
   constructor(private http: HttpClient) {
@@ -19,7 +20,7 @@ export class IoTService {
     let numReturned: number = 0;
     return new Observable<Record<string, Measurement[]>>(subscriber => {
       for (const device of devices) {
-        let url = `${this.measurementUrl}meas-${device}-${date}.txt`;
+        let url = `${environment.blobUrl}${this.measurementUrl}meas-${device}-${date}.txt`;
         console.log(`requesting ${url}`);
         this.http.get(url,
           {
@@ -119,7 +120,7 @@ export class IoTService {
   }
 
   getDevices(): string[] {
-    return ['DOIT1', 'BME280-1', 'DALLAS1', 'ESP32-1']
+    return environment.devices
   }
 
   getMeasurementTypes(): MeasurementType[] {
