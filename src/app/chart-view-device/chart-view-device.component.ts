@@ -42,7 +42,7 @@ export class ChartViewDeviceComponent implements OnInit {
       .subscribe(
         data => {
           console.log("subs data:", data)
-          self.measurements = data
+          self.measurements = data[this.measDevice]
         },
         err => {
           console.log("error:", err)

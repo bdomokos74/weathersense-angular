@@ -12,12 +12,12 @@ export class IoTService {
   constructor(private http: HttpClient) {
   }
 
-  getMeasurements(device: string, date: string): Observable<Measurement[]> {
+  getMeasurements(device: string, date: string): Observable<Record<string, Measurement[]>> {
     return this.getMeasurementsMulti([device], date)
   }
-  getMeasurementsMulti(devices: string[], date: string): Observable<Measurement[]> {
+  getMeasurementsMulti(devices: string[], date: string): Observable<Record<string, Measurement[]>> {
     let numReturned: number = 0;
-    return new Observable<Measurement[]>(subscriber => {
+    return new Observable<Record<string, Measurement[]>>(subscriber => {
       for (const device of devices) {
         let url = `${this.measurementUrl}meas-${device}-${date}.txt`;
         console.log(`requesting ${url}`);
@@ -84,7 +84,9 @@ export class IoTService {
           console.log("got data:")
           console.log(measurements[len - 1].ts);
           console.log(measurements[len - 1]);
-          subscriber.next(measurements);
+          let result: any = {}
+          result[device] = measurements
+          subscriber.next(result);
           numReturned += 1
           if(numReturned == devices.length) {
             subscriber.complete();

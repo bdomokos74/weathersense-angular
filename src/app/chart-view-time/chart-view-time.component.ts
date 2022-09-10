@@ -34,7 +34,7 @@ export class ChartViewTimeComponent implements OnInit {
   measType!: MeasurementType
 
   //measurements: Measurement[] = [];
-  data: Measurement[][] = [];
+  data: Record<string, Measurement[]> = {};
   numDataset = 0
 
   ngOnInit(): void {
@@ -46,17 +46,18 @@ export class ChartViewTimeComponent implements OnInit {
   // 2. create timeseries based on that data
   private readMeasurements() {
     let self = this
-    this.data = []
+    this.data = {}
     this.numDataset =0
     this.iotService.getMeasurementsMulti(this.devices, this.measDate)
       .subscribe(
         data => {
-          this.data.push(data)
+
+          Object.assign(this.data, data)
           this.numDataset += 1
         },
         err => {
           console.log("error:", err);
-          self.data = []
+          self.data = {}
         },
         () => {
           self.prepareDataAll()
@@ -68,9 +69,9 @@ export class ChartViewTimeComponent implements OnInit {
   private prepareDataAll() {
     let leftSeries: TimeSeries[] = []
     for (let i = 0; i < this.numDataset; i++) {
-      leftSeries.push( TimeSeries.createTimeSerie(this.devices[i], this.data[i], 'ts', this.measType.code1, this.measType, ""+(i+1)))
+      leftSeries.push( TimeSeries.createTimeSerie(this.devices[i], this.data[this.devices[i]], 'ts', this.measType.code1, this.measType, ""+(i+1)))
       if( this.measType.code2) {
-        let serie2 = TimeSeries.createTimeSerie(this.devices[i], this.data[i], 'ts', this.measType.code2, this.measType, ""+(i+1)+"_1");
+        let serie2 = TimeSeries.createTimeSerie(this.devices[i], this.data[this.devices[i]], 'ts', this.measType.code2, this.measType, ""+(i+1)+"_1");
         if(!serie2.empty)
           leftSeries.push(serie2)
       }
@@ -85,7 +86,7 @@ export class ChartViewTimeComponent implements OnInit {
     if(this.chartData) {
       this.prepareDataAll()
     } else {
-      this.data = []
+      this.data = {}
     }
   }
 

@@ -86,7 +86,6 @@ export class TimeSeries {
 
     let maxIndex = d3.maxIndex(Y)
     let minIndex = d3.minIndex(Y)
-    console.log("y", Y)
     let yMin = Y[minIndex]
     let yMax = Y[maxIndex]
     let yCurr = Y[Y.length-1]
