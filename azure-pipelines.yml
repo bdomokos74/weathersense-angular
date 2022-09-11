@@ -20,3 +20,7 @@ steps:
     npm install
     ng build --configuration test
   displayName: 'npm install and build'
+
+- script: |
+    pwd
+    ls -la
