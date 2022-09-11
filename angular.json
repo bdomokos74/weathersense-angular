@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "weathersense-angular2": {
+    "weathersense-angular": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/weathersense-angular2",
+            "outputPath": "dist/weathersense-angular",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -74,10 +74,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "weathersense-angular2:build:production"
+              "browserTarget": "weathersense-angular:build:production"
             },
             "development": {
-              "browserTarget": "weathersense-angular2:build:development",
+              "browserTarget": "weathersense-angular:build:development",
               "proxyConfig": "./proxy.conf.json"
             }
           },
@@ -86,7 +86,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "weathersense-angular2:build"
+            "browserTarget": "weathersense-angular:build"
           }
         },
         "test": {

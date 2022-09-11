@@ -50,10 +50,10 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ```
 # for prod:
-az storage blob upload-batch -s dist-compressed/weathersense-angular2 -d '$web' --account-name $AZURE_GUI_STORAGE_ACCOUNT
+az storage blob upload-batch -s dist-compressed/weathersense-angular -d '$web' --account-name $AZURE_GUI_STORAGE_ACCOUNT
 
 # for test:
-az storage blob upload-batch -s dist/weathersense-angular2 -d '$web' --account-name $AZURE_GUI_TEST_STORAGE_ACCOUNT
+az storage blob upload-batch -s dist/weathersense-angular -d '$web' --account-name $AZURE_GUI_TEST_STORAGE_ACCOUNT
 ```
 
 
