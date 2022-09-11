@@ -6,17 +6,16 @@
 trigger:
 - master
 
-pool:
-  vmImage: ubuntu-latest
+pool: 'Default'
 
 steps:
 - task: NodeTool@0
   inputs:
-    versionSpec: '10.x'
+    versionSpec: '18.x'
   displayName: 'Install Node.js'
 
 - script: |
     npm install -g @angular/cli
     npm install
-    ng build --prod
+    ng build --configuration test
   displayName: 'npm install and build'
