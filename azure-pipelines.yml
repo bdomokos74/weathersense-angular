@@ -19,6 +19,10 @@ steps:
     npm install -g @angular/cli
     npm install
     ng build --configuration test
+    pwd
+    ls -la
+    echo "-----------"
+    ls -la dist
   displayName: 'npm install and build'
 
 - task: CopyFiles@2
@@ -32,7 +36,7 @@ steps:
   inputs:
     sourceFolder: '$(Build.SourcesDirectory)'
     contents: 'release/*'
-    targetFolder: $(Build.ArtifactStagingDirectory)/release
+    targetFolder: $(Build.ArtifactStagingDirectory)
   displayName: 'Copy release script'
 
 - task: PublishPipelineArtifact@1
