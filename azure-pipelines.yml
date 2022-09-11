@@ -36,7 +36,7 @@ steps:
   inputs:
     sourceFolder: '$(Build.SourcesDirectory)'
     contents: 'release/*'
-    targetFolder: $(Build.ArtifactStagingDirectory)
+    targetFolder: $(Build.ArtifactStagingDirectory)/dist/release
   displayName: 'Copy release script'
 
 - task: PublishPipelineArtifact@1
