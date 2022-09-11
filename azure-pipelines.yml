@@ -21,6 +21,22 @@ steps:
     ng build --configuration test
   displayName: 'npm install and build'
 
-- script: |
-    pwd
-    ls -la
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: '$(Build.SourcesDirectory)'
+    contents: 'dist/weathersense-angular/*'
+    targetFolder: $(Build.ArtifactStagingDirectory)/dist
+  displayName: 'Copy npm package'
+
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: '$(Build.SourcesDirectory)'
+    contents: 'release/*'
+    targetFolder: $(Build.ArtifactStagingDirectory)/release
+  displayName: 'Copy release script'
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)/dist'
+    artifactName: weathersense-ui
+  displayName: 'Publish npm artifact'
