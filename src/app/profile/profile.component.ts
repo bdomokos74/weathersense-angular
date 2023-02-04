@@ -33,7 +33,7 @@ export class ProfileComponent implements OnInit {
       });
   }
 
-  signout() {
+  signOut() {
     console.log("signing out");
   }
 }
