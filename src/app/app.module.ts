@@ -12,8 +12,21 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatIconModule} from "@angular/material/icon";
 import {MatSortModule} from "@angular/material/sort";
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {PublicClientApplication, InteractionType, BrowserCacheLocation,} from '@azure/msal-browser';
-import {MsalGuard, MsalInterceptor, MsalModule,} from '@azure/msal-angular';
+import {
+  BrowserCacheLocation,
+  InteractionType,
+  IPublicClientApplication,
+  LogLevel,
+  PublicClientApplication,
+} from '@azure/msal-browser';
+import {
+  MSAL_GUARD_CONFIG,
+  MSAL_INSTANCE, MSAL_INTERCEPTOR_CONFIG,
+  MsalBroadcastService,
+  MsalGuard, MsalGuardConfiguration,
+  MsalInterceptor, MsalInterceptorConfiguration,
+  MsalModule, MsalService,
+} from '@azure/msal-angular';
 import {ChartViewDeviceComponent} from './chart-view-device/chart-view-device.component';
 import {ChartMenuComponent} from './chart-menu/chart-menu.component';
 import {ChartViewTimeComponent} from './chart-view-time/chart-view-time.component';
@@ -28,13 +41,63 @@ import {ChartExperimentComponent} from './chart-experiment/chart-experiment.comp
 import {MatButtonModule} from "@angular/material/button";
 import {environment} from "../environments/environment";
 import {AppRoutingModule} from './app-routing.module';
+import { LoginFailedComponent } from './login-failed/login-failed.component';
 
 const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
 
 const protectedResourceMap = new Map<string, Array<string>>();
-protectedResourceMap.set('https://graph.microsoft.com/v1.0/me', ['user.read']);
+protectedResourceMap.set('https://graph.microsoft.com/v1.0/me', ['https://graph.microsoft.com/.default']);
 protectedResourceMap.set(`${environment.blobUrl}/weathersense-data`, ['https://storage.azure.com/.default']);
 protectedResourceMap.set(`${environment.iotHubUrl}/devices`, ['https://iothubs.azure.net/.default']);
+
+export function loggerCallback(logLevel: LogLevel, message: string) {
+  console.log(message);
+}
+export function MSALInstanceFactory(): IPublicClientApplication {
+  return new PublicClientApplication({
+    auth: {
+      clientId: environment.clientId, // PPE testing environment
+      authority: `https://login.microsoftonline.com/${environment.tenantId}`, //
+      redirectUri: environment.baseUrl,
+      postLogoutRedirectUri: '/'
+    },
+    cache: {
+      cacheLocation: BrowserCacheLocation.LocalStorage,
+      storeAuthStateInCookie: isIE, // set to true for IE 11. Remove this line to use Angular Universal
+    },
+    system: {
+      loggerOptions: {
+        loggerCallback,
+        logLevel: LogLevel.Info,
+        piiLoggingEnabled: false
+      }
+    }
+  });
+}
+
+export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
+  const protectedResourceMap = new Map<string, Array<string>>();
+  protectedResourceMap.set('https://graph.microsoft.com/v1.0/me', ['user.read']); // Prod environment. Uncomment to use.
+  //protectedResourceMap.set('https://graph.microsoft-ppe.com/v1.0/me', ['user.read']);
+  protectedResourceMap.set(`${environment.blobUrl}/weathersense-data`, ['https://storage.azure.com/.default']);
+  protectedResourceMap.set(`${environment.iotHubUrl}/devices`, ['https://iothubs.azure.net/.default']);
+
+  return {
+    interactionType: InteractionType.Popup,
+    protectedResourceMap
+  };
+}
+
+export function MSALGuardConfigFactory(): MsalGuardConfiguration {
+  return {
+    interactionType: InteractionType.Popup,
+    authRequest: {
+      scopes: ['user.read']
+    },
+    loginFailedRoute: '/login-failed'
+  };
+}
+
 
 @NgModule({
   declarations: [
@@ -49,7 +112,8 @@ protectedResourceMap.set(`${environment.iotHubUrl}/devices`, ['https://iothubs.a
     SerieCardComponent,
     ChartExperimentComponent,
     ChartViewDeviceComponent,
-    ChartViewTimeComponent
+    ChartViewTimeComponent,
+    LoginFailedComponent
   ],
   imports: [
     BrowserModule,
@@ -67,28 +131,7 @@ protectedResourceMap.set(`${environment.iotHubUrl}/devices`, ['https://iothubs.a
     FormsModule,
     MatButtonModule,
     AppRoutingModule,
-    MsalModule.forRoot(new PublicClientApplication({
-        auth: {
-          clientId: environment.clientId, // PPE testing environment
-          authority: `https://login.microsoftonline.com/${environment.tenantId}`,
-          redirectUri: environment.baseUrl,
-          postLogoutRedirectUri: '/'
-        },
-        cache: {
-          cacheLocation: BrowserCacheLocation.LocalStorage,
-          storeAuthStateInCookie: isIE, // set to true for IE 11. Remove this line to use Angular Universal
-        }
-      }),
-      {
-        interactionType: InteractionType.Redirect,
-        authRequest: {
-          'scopes': ['user.read']
-        }
-      },
-      {
-        interactionType: InteractionType.Redirect,
-        protectedResourceMap
-      })
+    MsalModule
   ],
   providers: [
     {
@@ -96,10 +139,23 @@ protectedResourceMap.set(`${environment.iotHubUrl}/devices`, ['https://iothubs.a
       useClass: MsalInterceptor,
       multi: true
     },
+    {
+      provide: MSAL_INSTANCE,
+      useFactory: MSALInstanceFactory
+    },
+    {
+      provide: MSAL_GUARD_CONFIG,
+      useFactory: MSALGuardConfigFactory
+    },
+    {
+      provide: MSAL_INTERCEPTOR_CONFIG,
+      useFactory: MSALInterceptorConfigFactory
+    },
+    MsalService,
     MsalGuard,
+    MsalBroadcastService
   ],
   bootstrap: [AppComponent]
 })
-
 export class AppModule {
 }

@@ -7,8 +7,10 @@ import {ChartViewTimeComponent} from "./chart-view-time/chart-view-time.componen
 import {ChartExperimentComponent} from "./chart-experiment/chart-experiment.component";
 import {RouterModule} from "@angular/router";
 import {BrowserUtils} from "@azure/msal-browser";
+import {LoginFailedComponent} from "./login-failed/login-failed.component";
 
 const routes = [
+  {path: 'login-failed', component: LoginFailedComponent},
   {path: '', component: ChartViewTimeComponent, canActivate: [MsalGuard]},
   {path: 'device-view', component: DeviceViewComponent, canActivate: [MsalGuard]},
   {path: 'profile', component: ProfileComponent, canActivate: [MsalGuard]},
