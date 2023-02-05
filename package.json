@@ -1,16 +1,17 @@
 {
   "name": "weathersense-angular",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "prebuild": "ts-node -O \"{\\\"module\\\": \\\"commonjs\\\"}\" git.version.ts",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "build-compress": "ng build --configuration production && gzipper c ./dist --include js,css,html --output-file-format [filename].[ext] ./dist-compressed/"
   },
   "private": true,
-  "dependencies": {
+  "dependencies":{
     "@angular/animations": "^15.1.3",
     "@angular/cdk": "^15.1.3",
     "@angular/common": "^15.1.3",
@@ -23,12 +24,13 @@
     "@angular/router": "^15.1.3",
     "@azure/msal-angular": "^2.5.2",
     "@azure/msal-browser": "^2.32.2",
-    "@azure/storage-blob": "^12.11.0",
-    "d3": "^7.6.1",
+    "@azure/storage-blob": "^12.12.0",
+    "d3": "^7.8.2",
+    "moment": "^2.29.4",
     "rxjs": "~7.5.0",
+    "ts-node": "^10.9.1",
     "tslib": "^2.3.0",
-    "zone.js": "~0.11.4",
-    "moment": "^2.29.4"
+    "zone.js": "~0.11.4"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^15.1.4",

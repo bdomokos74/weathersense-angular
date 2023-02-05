@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {Component, OnInit} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 import {MsalService} from "@azure/msal-angular";
 
 const GRAPH_ENDPOINT = 'https://graph.microsoft.com/v1.0/me';
@@ -17,7 +17,9 @@ type ProfileType = {
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  profile!: ProfileType;
+  profile: ProfileType|null = null;
+  loginDisplay = false;
+  isIframe = false
 
   constructor(
     private http: HttpClient,
@@ -25,6 +27,7 @@ export class ProfileComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.setLoginDisplay();
     this.getProfile();
   }
 
@@ -32,6 +35,7 @@ export class ProfileComponent implements OnInit {
     this.http.get(GRAPH_ENDPOINT)
       .subscribe(profile => {
         this.profile = profile;
+
       });
   }
 
@@ -40,5 +44,9 @@ export class ProfileComponent implements OnInit {
     this.authService.logoutPopup({
       mainWindowRedirectUri: "/"
     });
+  }
+
+  setLoginDisplay() {
+    this.loginDisplay = this.authService.instance.getAllAccounts().length > 0;
   }
 }

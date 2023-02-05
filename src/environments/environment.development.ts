@@ -1,9 +1,9 @@
 export const environment = {
-  env: 'test',
+  env: 'development',
 
   production: true,
 
-  baseUrl: 'https://weathersenseguitest.z6.web.core.windows.net',
+  baseUrl: 'http://localhost:4200',
   blobUrl: 'https://weathersenseteststorage.blob.core.windows.net',
   iotHubUrl: 'https://weathersensehub.azure-devices.net',
 

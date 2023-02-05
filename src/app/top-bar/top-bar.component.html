@@ -33,9 +33,12 @@
       <mat-icon>insights</mat-icon>
     </a>
   </button>
-  <button class="example-icon" aria-label="Example icon-button with share icon">
+  <button *ngIf="loginDisplay" class="example-icon" aria-label="Example icon-button with share icon">
     <a [routerLink]="['/profile']">
       <mat-icon>account_circle</mat-icon>
     </a>
+  </button>
+  <button *ngIf="!loginDisplay" class="example-icon" aria-label="Example icon-button with share icon" (click)="login()">
+      <mat-icon>login</mat-icon>
   </button>
 </mat-toolbar>

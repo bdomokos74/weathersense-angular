@@ -14,7 +14,7 @@ Run `ng g component component-name` to generate a new component. You can also us
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-```
+```bash
 ng build --configuration test
 ng build --prod
 ```
@@ -27,12 +27,24 @@ npm run build-compress
 
 Also need to set Content-encoding of the zipped files to GZip
 
-```
-$result =  npm run build-compress
+```bash
+npm run prebuild
+npm run build-compress
+$result = az storage blob upload-batch -s .\dist-compressed\weathersense-angular\ -d '$web' --account-name weathersensegui --overwrite
 $fileList = $result | jq '.[].Blob'
 az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n index.html
-...
-```
+
+# TODO
+foreach($f in $fileList) {
+az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n $f  
+ }
+````
+az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n index.html
+az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n main.ea10f696f309f18a.js
+az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n main.ff9a5dc28e23e64e.js
+az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n polyfills.24cbda400234e41e.js
+az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n runtime.f7249a53dc95b10f.js
+az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n styles.ee8bbc17a1a0c0ea.css
 
 ## Running unit tests
 
@@ -48,7 +60,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ### How to deploy the SPA
 
-```
+```bash
 # for prod:
 az storage blob upload-batch -s dist-compressed/weathersense-angular -d '$web' --account-name $AZURE_GUI_STORAGE_ACCOUNT
 
@@ -59,7 +71,7 @@ az storage blob upload-batch -s dist/weathersense-angular -d '$web' --account-na
 
 ### Add d3
 
-```
+```bash
 npm install d3 && npm install @types/d3 --save-dev
 ```
 
