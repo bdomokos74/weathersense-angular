@@ -9,7 +9,7 @@ import {ChartData} from "../chart-data";
   styleUrls: ['./time-chart.component.css']
 })
 export class TimeChartComponent implements OnInit {
-  private margin = {top: 45, bottom: 15, left: 85, right: 20};
+  private margin = {top: 45, bottom: 15, left: 30, right: 0};
   private width: number = 0;
   private height: number = 0;
 

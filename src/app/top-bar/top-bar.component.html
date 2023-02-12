@@ -1,44 +1,51 @@
 <mat-toolbar>
-  <button class="white md-36" aria-label="Weathersense menu">
-    <mat-icon>menu</mat-icon>
-  </button>
+  <div class="toolbar">
 
-  <span class="sitename-wrapper">
-    <a [routerLink]="['/']">
-      <h1>WeatherSense</h1>
-    </a>
-  </span>
+    <button mat-icon-button class="white md-36" aria-label="Weathersense menu">
+      <mat-icon>menu</mat-icon>
+    </button>
 
-  <button class="white md-36" aria-label="Thermostat charts">
-    <a [routerLink]="['/device-view']">
-      <mat-icon>thermostat</mat-icon>
-    </a>
-  </button>
-  <button class="white md-36" aria-label="Charts">
-    <a [routerLink]="['/chart-view-device']">
-      <mat-icon>insert_chart_outlined</mat-icon>
-    </a>
-  </button>
+    <button class="white md-36" aria-label="Weathersense menu">
+      Weathersense
+    </button>
 
-  <button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
-    <a [routerLink]="['/chart-view-time']">
-      <mat-icon>candlestick_chart</mat-icon>
-    </a>
-  </button>
+    <button class="white md-36" aria-label="Thermostat charts">
+      <a [routerLink]="['/device-view']">
+        <mat-icon>thermostat</mat-icon>
+      </a>
+    </button>
+    <button class="white md-36" aria-label="Charts">
+      <a [routerLink]="['/chart-view-device']">
+        <mat-icon>insert_chart_outlined</mat-icon>
+      </a>
+    </button>
+
+    <button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+      <a [routerLink]="['/chart-view-time']">
+        <mat-icon>candlestick_chart</mat-icon>
+      </a>
+    </button>
+
+    </div>
 
   <span class="row-middle"></span>
 
-  <button class="example-icon" aria-label="Example icon-button with share icon">
-    <a [routerLink]="['/experiment']">
-      <mat-icon>insights</mat-icon>
-    </a>
-  </button>
-  <button *ngIf="loginDisplay" class="example-icon" aria-label="Example icon-button with share icon">
-    <a [routerLink]="['/profile']">
-      <mat-icon>account_circle</mat-icon>
-    </a>
-  </button>
-  <button *ngIf="!loginDisplay" class="example-icon" aria-label="Example icon-button with share icon" (click)="login()">
+  <div>
+
+    <button class="white md-36"  aria-label="Example icon-button with share icon">
+      <a [routerLink]="['/experiment']">
+        <mat-icon>insights</mat-icon>
+      </a>
+    </button>
+    <button *ngIf="loginDisplay" class="white md-36"  aria-label="Example icon-button with share icon">
+      <a [routerLink]="['/profile']">
+        <mat-icon>account_circle</mat-icon>
+      </a>
+    </button>
+    <button *ngIf="!loginDisplay" class="white md-36"  aria-label="Example icon-button with share icon"
+            (click)="login()">
       <mat-icon>login</mat-icon>
-  </button>
+    </button>
+  </div>
+
 </mat-toolbar>

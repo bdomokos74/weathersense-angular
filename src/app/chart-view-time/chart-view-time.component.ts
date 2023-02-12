@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core'
+import {Component, HostListener, OnInit} from '@angular/core'
 import {ChartData} from "../chart-data"
 import {MeasurementType} from "../measurement-type"
 import {IoTService} from "../iot.service"
@@ -6,6 +6,7 @@ import {DatePipe} from "@angular/common"
 import {Measurement} from "../measurement"
 import {TimeSeries} from "../timeseries"
 import {ChartService} from "../chart.service"
+import {catchError, of} from "rxjs";
 
 @Component({
   selector: 'app-chart-view-time',
@@ -37,7 +38,22 @@ export class ChartViewTimeComponent implements OnInit {
   data: Record<string, Measurement[]> = {}
   numDataset = 0
 
+  isMobileView = false
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    console.log("resize2");
+    this.isMobileView = this.isMobile(event.target.innerWidth);
+    console.log(`mobileview=${this.isMobileView}, ${event.target.innerWidth}`);
+  }
+
+  isMobile(w: number): boolean {
+    return w <= 820;
+  }
+
   ngOnInit(): void {
+    this.isMobileView = this.isMobile(window.innerWidth);
+
     this.readMeasurements()
     this.chartService.chartEventListner().subscribe(msg => {
       console.log("chart view time got event:", msg)
@@ -56,30 +72,31 @@ export class ChartViewTimeComponent implements OnInit {
     this.data = {}
     this.numDataset = 0
     this.iotService.getMeasurementsMulti(this.devices, this.measDate)
-      .subscribe(
-        data => {
+      .pipe(catchError((err: any) => of(undefined)))
+      .subscribe({
+        next: (data) => {
+          console.log("readmulti.next:", data);
           Object.assign(this.data, data)
           this.numDataset += 1
         },
-        err => {
-          console.log("error:", err)
-          self.data = {}
-        },
-        () => {
-          self.prepareDataAll()
-          console.log('done reading data=================')
+        complete: () => {
+          console.log('readmulti.complete=================');
+          self.prepareDataAll();
         }
-      )
+      });
   }
 
   private prepareDataAll() {
     let leftSeries: TimeSeries[] = []
     for (let i = 0; i < this.numDataset; i++) {
-      leftSeries.push(TimeSeries.createTimeSerie(this.devices[i], this.data[this.devices[i]], 'ts', this.measType.code1, this.measType, "" + (i + 1)))
-      if (this.measType.code2) {
-        let serie2 = TimeSeries.createTimeSerie(this.devices[i], this.data[this.devices[i]], 'ts', this.measType.code2, this.measType, "" + (i + 1) + "_1")
-        if (!serie2.empty)
-          leftSeries.push(serie2)
+      if (this.data[this.devices[i]] !== undefined) {
+
+        leftSeries.push(TimeSeries.createTimeSerie(this.devices[i], this.data[this.devices[i]], 'ts', this.measType.code1, this.measType, "" + (i + 1)))
+        if (this.measType.code2) {
+          let serie2 = TimeSeries.createTimeSerie(this.devices[i], this.data[this.devices[i]], 'ts', this.measType.code2, this.measType, "" + (i + 1) + "_1")
+          if (!serie2.empty)
+            leftSeries.push(serie2)
+        }
       }
     }
     this.chartData = {
