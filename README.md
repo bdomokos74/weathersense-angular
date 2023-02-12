@@ -38,13 +38,14 @@ az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --con
 foreach($f in $fileList) {
 az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n $f  
  }
-````
+
 az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n index.html
 az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n main.ea10f696f309f18a.js
 az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n main.ff9a5dc28e23e64e.js
 az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n polyfills.24cbda400234e41e.js
 az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n runtime.f7249a53dc95b10f.js
 az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n styles.ee8bbc17a1a0c0ea.css
+```
 
 ## Running unit tests
 
@@ -67,6 +68,25 @@ az storage blob upload-batch -s dist-compressed/weathersense-angular -d '$web' -
 # for test:
 az storage blob upload-batch -s dist/weathersense-angular -d '$web' --account-name $AZURE_GUI_TEST_STORAGE_ACCOUNT
 ```
+
+### Export devices
+
+Create a file with the below content:
+
+```json
+{
+  "exportBlobContainerUri": "blobsasurl with read, write and delete access",
+  "excludeKeys": true
+}
+```
+
+Execute in az cli (after login):  
+
+```bash
+az rest -m get --header "Accept=application/json" -u 'https://management.azure.com/subscriptions/<subs id>/resourceGroups/<resourcegroup>/providers/Microsoft.Devices/IotHubs/<iothubname>/exportDevices?api-version=2018-04-01' --body @exportreq.json
+```
+
+This will create a devices.txt in the given container.
 
 
 ### Add d3
@@ -92,7 +112,7 @@ https://mater`ial.angular.io/components/table/examples#table-http
 #### IoT HUB query
 
 ```
-SELECT deviceId, properties.desired.doSleep, properties.reported.fwVersion, properties.reported.gitRevision, properties.reported.$metadata.$lastUpdated
+SELECT deviceId, properties.desired.do[sensors.json](..%2F..%2FDownloads%2Fsensors.json)Sleep, properties.reported.fwVersion, properties.reported.gitRevision, properties.reported.$metadata.$lastUpdated
 FROM devices
 ```
 

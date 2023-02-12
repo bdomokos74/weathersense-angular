@@ -25,6 +25,8 @@ export class ChartLegendComponent implements OnInit {
     if(chartData && chartData.leftSeries)
       allSeries = allSeries.concat(chartData.leftSeries)
 
+    allSeries = allSeries.filter( s => s.yDomain[0]!==undefined && s.yDomain[1]!== undefined);
+
     if(allSeries.length>0)
       this.series = allSeries
     console.log("allseries: ", allSeries)

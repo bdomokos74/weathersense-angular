@@ -4,23 +4,27 @@ import {Observable, of} from "rxjs";
 import {Measurement} from "./measurement";
 import {MeasurementType} from "./measurement-type";
 import {environment} from "../environments/environment";
+import {MsalService} from "@azure/msal-angular";
 
 @Injectable({providedIn: 'root'})
 export class IoTService {
   private measurementUrl = '/weathersense-data/';
   private headers = {"x-ms-version": "2020-04-08"};
-
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private msalService: MsalService) {
   }
 
   getMeasurements(device: string, date: string): Observable<Record<string, Measurement[]>> {
     return this.getMeasurementsMulti([device], date)
   }
   getMeasurementsMulti(devices: string[], date: string): Observable<Record<string, Measurement[]>> {
+    let blobUrl = environment.blobUrl;
+    if (this.msalService.instance.getAllAccounts().length == 0) {
+      blobUrl = environment.publicBlobUrl;
+    }
     let numReturned: number = 0;
     return new Observable<Record<string, Measurement[]>>(subscriber => {
       for (const device of devices) {
-        let url = `${environment.blobUrl}${this.measurementUrl}meas-${device}-${date}.txt`;
+        let url = `${blobUrl}${this.measurementUrl}meas-${device}-${date}.txt`;
         console.log(`requesting ${url}`);
         this.http.get(url,
           {
@@ -127,6 +131,7 @@ export class IoTService {
     return [
       {name: 'Temperature', code1: 't1', code2: 't2', unit: '°C'},
       {name: 'Pressure', code1: 'p', code2: undefined, unit: 'hPa'},
-      {name: 'Humidity', code1: 'h', code2: undefined, unit: '%'}];
+      {name: 'Humidity', code1: 'h', code2: undefined, unit: '%'},
+      {name: 'Radiation', code1: 'cpm', code2: undefined, unit: 'cpm'}];
   }
 }

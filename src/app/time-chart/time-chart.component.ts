@@ -87,12 +87,17 @@ export class TimeChartComponent implements OnInit {
     let yDomainLeft = [Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY]
     let yDomainRight = [Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY]
     for (const s of leftSeries) {
-      console.log(`${s.code}: ${s.xDomain}, visible:${s.visible}`)
+      console.log(`===>${s.code}: ${s.xDomain}, visible:${s.visible}`)
       if(s.visible) {
         xDomain[0] = Math.min(xDomain[0], s.xDomain[0])
         xDomain[1] = Math.max(xDomain[1], s.xDomain[1])
-        yDomainLeft[0] = Math.min(yDomainLeft[0], s.yDomain[0])
-        yDomainLeft[1] = Math.max(yDomainLeft[1], s.yDomain[1])
+        let yDomain_0 = s.yDomain[0];
+        let yDomain_1 = s.yDomain[1];
+        console.log("y0, y1", yDomain_0, yDomain_1);
+        if( !isNaN(yDomain_0) && !isNaN( yDomain_1)) {
+          yDomainLeft[0] = Math.min(yDomainLeft[0], s.yDomain[0])
+          yDomainLeft[1] = Math.max(yDomainLeft[1], s.yDomain[1])
+        }
       }
     }
 
