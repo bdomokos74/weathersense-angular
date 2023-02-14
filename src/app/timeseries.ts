@@ -90,9 +90,9 @@ export class TimeSeries {
     let yMin = Y[minIndex]
     let yMax = Y[maxIndex]
     let yCurr = Y[Y.length-1]
-    result.yMinTime = moment(X[minIndex]).format('HH:MM')
-    result.yMaxTime = moment(X[maxIndex]).format('HH:MM')
-    result.yCurrTime = moment(X[X.length-1]).format('HH:MM')
+    result.yMinTime = moment(X[minIndex]).format('HH:mm')
+    result.yMaxTime = moment(X[maxIndex]).format('HH:mm')
+    result.yCurrTime = moment(X[X.length-1]).format('HH:mm')
 
     let digits = 2
     if(type.name==='Pressure') {
