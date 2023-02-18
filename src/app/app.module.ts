@@ -35,6 +35,7 @@ const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigato
 const protectedResourceMap = new Map<string, Array<string>>();
 protectedResourceMap.set('https://graph.microsoft.com/v1.0/me', ['https://graph.microsoft.com/.default']); // Prod environment. Uncomment to use.
 //protectedResourceMap.set('https://graph.microsoft-ppe.com/v1.0/me', ['user.read']);
+protectedResourceMap.set(`${environment.blobUrl}/weathersense-config`, ['https://storage.azure.com/.default']);
 protectedResourceMap.set(`${environment.blobUrl}/weathersense-data`, ['https://storage.azure.com/.default']);
 protectedResourceMap.set(`${environment.iotHubUrl}/devices`, ['https://iothubs.azure.net/.default']);
 

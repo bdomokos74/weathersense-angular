@@ -16,7 +16,6 @@ export class ChartLegendComponent implements OnInit {
   private _chartData: ChartData|undefined = undefined;
   @Input()
   set chartData(chartData: ChartData|undefined) {
-    console.log("setting chartdata: ", chartData)
     this._chartData= chartData
     let allSeries:TimeSeries[] = []
 

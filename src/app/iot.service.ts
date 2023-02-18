@@ -5,7 +5,7 @@ import {Measurement} from "./measurement";
 import {MeasurementType} from "./measurement-type";
 import {environment} from "../environments/environment";
 import {MsalService} from "@azure/msal-angular";
-import {DeviceType} from "./device-type";
+import {DeviceTags, DeviceType} from "./device-type";
 
 @Injectable({providedIn: 'root'})
 export class IoTService {
@@ -25,10 +25,25 @@ export class IoTService {
         }).subscribe(
         {
           next(str) {
-
             let devs: DeviceType[] = str.split("\n")
               .filter(s => s.length > 0)
-              .map(s => JSON.parse(s));
+              .map(s => {
+                let obj = JSON.parse(s);
+                let tags: DeviceTags = {
+                  location: obj.tags?.deploymentLocation?.city,
+                  deviceType: obj.tags?.deviceType,
+                  telemetryVersion: obj.tags?.telemetryVersion,
+                  version: obj.tags?.version
+                }
+                return {
+                  id: obj.id,
+                  status: obj.status,
+                  testDevice: obj.tags?.testDevice,
+                  desiredProperties: obj.properties.desired,
+                  reportedProperties: obj.properties.reported,
+                  tags: tags
+                }
+              });
             subscriber.next(devs);
           },
           complete() {
@@ -131,8 +146,8 @@ export class IoTService {
               }
 
             },
-            error(error) {
-              subscriber.error(error)
+            error() {
+              numReturned += 1;
             }
           }
         );

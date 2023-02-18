@@ -42,9 +42,8 @@ export class ChartViewTimeComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    console.log("resize2");
     this.isMobileView = this.isMobile(event.target.innerWidth);
-    console.log(`mobileview=${this.isMobileView}, ${event.target.innerWidth}`);
+    //console.log(`mobileview=${this.isMobileView}, ${event.target.innerWidth}`);
   }
 
   isMobile(w: number): boolean {
@@ -83,7 +82,7 @@ export class ChartViewTimeComponent implements OnInit {
     this.data = {}
     this.numDataset = 0
     this.iotService.getMeasurementsMulti(devices, this.measDate)
-      .pipe(catchError(() => of(undefined)))
+      .pipe(catchError(() => of({})))
       .subscribe({
         next: (data) => {
           console.log("readmulti.next:", data);

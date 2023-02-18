@@ -9,7 +9,7 @@
       Weathersense
     </button>
 
-    <button class="white md-36" aria-label="Thermostat charts">
+    <button *ngIf="loginDisplay" class="white md-36" aria-label="Thermostat charts">
       <a [routerLink]="['/device-view']">
         <mat-icon>thermostat</mat-icon>
       </a>

@@ -1,9 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {HttpClient} from "@angular/common/http";
-
-const IOTHUB_DEV_ENDPOINT = "/hub/devices?api-version=2020-05-31-preview";
-
+import {IoTService} from "../iot.service";
+import * as moment from "moment/moment";
 @Component({
   selector: 'app-device-view',
   templateUrl: './device-view.component.html',
@@ -19,29 +17,74 @@ const IOTHUB_DEV_ENDPOINT = "/hub/devices?api-version=2020-05-31-preview";
 
 export class DeviceViewComponent implements OnInit {
   devices: DeviceRow[] = [];
-  columnsToDisplay: string[] = ['deviceId', 'modelId', 'status', 'version'];
+  columnsToDisplay: string[] = [
+    'id',
+    'status',
+    'testDevice',
+    'location',
+    'fwVersion',
+    'gitRevision',
+    'doSleep',
+    'measureBatchSize',
+    'measureIntervalMs',
+    'sleepTimeSec',
+    'lastUpdated'
+  ];
+  columnTitles: string[] = [
+    'Device',
+    'Status',
+    'Test Device',
+    'Location',
+    'Firmware',
+    'Version',
+    'Sleep',
+    'BatchSize',
+    'MeasureInterval(ms)',
+    'SleepTime(s)',
+    'Updated'
+  ];
   expandedElement: DeviceRow | null = null;
   //datasource = this.devices;
 
-  constructor(private http: HttpClient) {
+  constructor(private iotService: IoTService) {
   }
 
   ngOnInit(): void {
 //console.log("devices:", this.devices);
-    this.getDevices();
-  }
-
-  getDevices() {
-    this.http.get<DeviceRow[]>(IOTHUB_DEV_ENDPOINT, {headers: {"x-ms-version": "2020-04-08"}})
-      .subscribe(data => {
-        this.devices = data;
-      });
+    let self = this;
+    this.iotService.getDevices().subscribe({
+      next(devs) {
+        self.devices = devs.map( d => {return {
+          id: d.id,
+          status: d.status,
+          testDevice: d.testDevice,
+          fwVersion: d.reportedProperties.fwVersion,
+          gitRevision: d.reportedProperties.gitRevision,
+          doSleep: d.reportedProperties.doSleep,
+          measureBatchSize: d.reportedProperties.measureBatchSize,
+          measureIntervalMs: d.reportedProperties.measureBatchSize,
+          sleepTimeSec: d.reportedProperties.sleepTimeSec,
+          lastUpdated: moment( new Date().getTime()).format('YYYY-MM-DD HH:mm'),
+          location: d.tags?.location
+        }});
+        console.log("got devices, ", devs);
+      }
+    });
   }
 }
 
 export interface DeviceRow {
-  deviceId: string,
-  modelId: string,
+  id: string,
   status: string,
-  version: number
+  testDevice: boolean,
+  fwVersion: string,
+  gitRevision: string,
+  doSleep: boolean,
+  measureBatchSize: number,
+  measureIntervalMs: number,
+  sleepTimeSec: number,
+  lastUpdated: string,
+
+  location: string
+
 }
