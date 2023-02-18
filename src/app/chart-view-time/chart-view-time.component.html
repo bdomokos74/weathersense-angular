@@ -22,24 +22,24 @@
 
 <ng-template #mobileTimeChart>
 
-    <div class="singlecol">
-      <app-chart-menu
-        [showDeviceSelect]="false"
-        [showMeasurement2Select]="false"
-        [measurements]="measTypes"
-        (measDate)="onMeasDate($event)"
-        (selectedMeasurement)="onSelectedMeasurement($event)">
-      </app-chart-menu>
-    </div>
+  <div class="singlecol">
+    <app-time-chart [chartData]="chartData">
+    </app-time-chart>
+  </div>
 
-    <div class="singlecol">
-      <app-time-chart [chartData]="chartData">
-      </app-time-chart>
-    </div>
+  <div class="singlecol">
+    <app-chart-legend [chartData]="chartData">
+    </app-chart-legend>
+  </div>
 
-    <div class="singlecol">
-      <app-chart-legend [chartData]="chartData">
-      </app-chart-legend>
-    </div>
+  <span class="singlecol">
+    <app-chart-menu
+      [showDeviceSelect]="false"
+      [showMeasurement2Select]="false"
+      [measurements]="measTypes"
+      (measDate)="onMeasDate($event)"
+      (selectedMeasurement)="onSelectedMeasurement($event)">
+    </app-chart-menu>
+  </span>
 
 </ng-template>

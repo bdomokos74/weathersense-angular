@@ -38,6 +38,6 @@
   </mat-form-field>
 
   <div>
-    {{_measDate.getRawValue()}}, {{_selectedDevice}}
+    {{_measDate.getRawValue()| date: 'YYYYMMdd HH:mm'}}
   </div>
 </div>

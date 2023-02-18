@@ -47,6 +47,7 @@ export class ChartViewTimeComponent implements OnInit {
   ngOnInit(): void {
     let self = this;
     this.isMobileView = this.isMobile(window.innerWidth);
+    console.log("isMobile=" + this.isMobileView + " " + window.innerWidth);
     this.iotService.getDevices().subscribe({
       next(devs) {
         let devices = devs.map(d => d.id);
