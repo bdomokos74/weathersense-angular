@@ -12,6 +12,11 @@ mat-toolbar {
 mat-icon {
   color: white;
 }
+
+mat-label {
+  color: white;
+  font-size: 24px;
+}
 app-top-bar h1 {
   color: white;
   margin: 0;

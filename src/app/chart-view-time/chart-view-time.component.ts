@@ -1,4 +1,4 @@
-import {Component, HostListener, OnInit} from '@angular/core'
+import {Component, OnInit} from '@angular/core'
 import {ChartData} from "../chart-data"
 import {MeasurementType} from "../measurement-type"
 import {IoTService} from "../iot.service"
@@ -39,12 +39,6 @@ export class ChartViewTimeComponent implements OnInit {
   numDataset = 0
 
   isMobileView = false
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.isMobileView = this.isMobile(event.target.innerWidth);
-    //console.log(`mobileview=${this.isMobileView}, ${event.target.innerWidth}`);
-  }
 
   isMobile(w: number): boolean {
     return w <= 820;

@@ -23,6 +23,7 @@ const routes = [
   declarations: [],
   imports: [
     RouterModule.forRoot(routes, {
+      useHash: true,
       onSameUrlNavigation: "reload",
       initialNavigation: !BrowserUtils.isInIframe() && !BrowserUtils.isInPopup() ? 'enabledNonBlocking' : 'disabled' // Set to enabledBlocking to use Angular Universal
     })
