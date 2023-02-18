@@ -34,6 +34,9 @@ export class TimeChartComponent implements OnInit {
     return this._chartData
   }
 
+  @Input()
+  isMobile: boolean = false;
+
   constructor() {
   }
 
@@ -67,7 +70,7 @@ export class TimeChartComponent implements OnInit {
   private draw(): void {
     console.log("calling draw", this.chartData);
     const width = this.container.nativeElement.offsetWidth;
-    const height = 960;
+    const height = this.isMobile?500:960;
     console.log(`container id: ${this.container.nativeElement}`)
     const svgContainer = d3.select(".svg-container");
     svgContainer.selectAll("*").remove();

@@ -1,9 +1,9 @@
-
-<div class="row">
+<div class="row" *ngIf="!isMobileView; else mobileTimeChart">
   <div class="col1">
     <app-chart-menu [devices]="devices"
                     [measurements]="measTypes"
                     (selectedDevice)="onSelectedDevice($event)"
+                    (selectedDevice2)="onSelectedDevice2($event)"
                     (measDate)="onMeasDate($event)"
                     (selectedMeasurement)="onSelectedMeasurement($event)"
                     (selectedMeasurement2)="onSelectedMeasurement2($event)">
@@ -20,3 +20,26 @@
     </app-chart-legend>
   </div>
 </div>
+
+<ng-template #mobileTimeChart>
+  <div class="singlecol">
+    <app-time-chart [chartData]="chartData" [isMobile]="true">
+    </app-time-chart>
+  </div>
+
+  <div class="singlecol">
+    <app-chart-legend [chartData]="chartData">
+    </app-chart-legend>
+  </div>
+
+  <div class="singlecol">
+    <app-chart-menu [devices]="devices"
+                    [measurements]="measTypes"
+                    (selectedDevice)="onSelectedDevice($event)"
+                    (selectedDevice2)="onSelectedDevice2($event)"
+                    (measDate)="onMeasDate($event)"
+                    (selectedMeasurement)="onSelectedMeasurement($event)"
+                    (selectedMeasurement2)="onSelectedMeasurement2($event)">
+    </app-chart-menu>
+  </div>
+</ng-template>

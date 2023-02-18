@@ -12,4 +12,6 @@ export class HomeComponent {
   branch = versions.branch;
   env = environment.env;
 
+  width = window.innerWidth;
+  height = window.innerHeight;
 }

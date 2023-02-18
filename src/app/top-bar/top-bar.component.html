@@ -1,11 +1,5 @@
 <mat-toolbar>
   <mat-toolbar-row>
-
-
-    <button mat-icon-button class="white md-36" aria-label="Weathersense menu">
-      <mat-icon>menu</mat-icon>
-    </button>
-
     <button class="white md-36" aria-label="Weathersense Home">
       <a [routerLink]="['']" class="white md-36">
         <mat-label>Weathersense</mat-label>
@@ -31,12 +25,6 @@
     </button>
 
     <span class="row-middle"></span>
-
-    <button class="white md-36" aria-label="Example icon-button with share icon">
-      <a [routerLink]="['/experiment']">
-        <mat-icon>insights</mat-icon>
-      </a>
-    </button>
 
     <button *ngIf="loginDisplay" class="white md-36" aria-label="Example icon-button with share icon">
       <a [routerLink]="['/profile']">

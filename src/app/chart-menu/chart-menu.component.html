@@ -28,6 +28,16 @@
   </div>
 
   <mat-form-field *ngIf="showMeasurement2Select"  class="form-full-width" appearance="fill">
+    <mat-label>Device2</mat-label>
+    <mat-select [(ngModel)]="_selectedDevice2">
+      <mat-option value=""></mat-option>
+      <mat-option *ngFor="let d2 of devices" [value]="d2">
+        {{d2}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="showMeasurement2Select"  class="form-full-width" appearance="fill">
     <mat-label>Measurement2</mat-label>
     <mat-select [(ngModel)]="_selectedMeasurement2">
       <mat-option value=""></mat-option>

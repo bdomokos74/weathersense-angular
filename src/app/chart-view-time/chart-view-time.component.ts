@@ -40,13 +40,9 @@ export class ChartViewTimeComponent implements OnInit {
 
   isMobileView = false
 
-  isMobile(w: number): boolean {
-    return w <= 820;
-  }
-
   ngOnInit(): void {
     let self = this;
-    this.isMobileView = this.isMobile(window.innerWidth);
+    this.isMobileView = ( window.innerWidth <= 820);
     console.log("isMobile=" + this.isMobileView + " " + window.innerWidth);
     this.iotService.getDevices().subscribe({
       next(devs) {
@@ -54,9 +50,6 @@ export class ChartViewTimeComponent implements OnInit {
         self.devices = devices;
         console.log("got devices, ", devs, devices);
         self.readMeasurements(devices);
-      },
-      complete() {
-        console.log("getdevices done");
       }
     });
 

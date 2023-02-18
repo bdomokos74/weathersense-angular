@@ -25,6 +25,7 @@ export class ChartMenuComponent implements OnInit {
   set devices(devices) {
     this._devices = devices
     this._selectedDevice = this._devices[0]
+    this._selectedDevice2 = this._devices[0]
   }
 
   _measurements: MeasurementType[] = []
@@ -38,9 +39,12 @@ export class ChartMenuComponent implements OnInit {
   }
 
 
+
   _measDate = new FormControl(new Date());
   @Output()
   measDate = new EventEmitter<Date>();
+
+
 
   selectedDeviceVal!: string;
   get _selectedDevice() {
@@ -52,6 +56,19 @@ export class ChartMenuComponent implements OnInit {
   }
   @Output()
   selectedDevice = new EventEmitter<string>();
+
+
+  selectedDeviceVal2!: string;
+  get _selectedDevice2() {
+    return this.selectedDeviceVal2;
+  }
+  set _selectedDevice2(value) {
+    this.selectedDeviceVal2 = value;
+    this.selectedDevice2.emit(this.selectedDeviceVal2);
+  }
+  @Output()
+  selectedDevice2 = new EventEmitter<string>();
+
 
 
   selectedMeasurementVal!: MeasurementType
