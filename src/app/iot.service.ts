@@ -1,26 +1,58 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {Observable, of} from "rxjs";
+import {Observable} from "rxjs";
 import {Measurement} from "./measurement";
 import {MeasurementType} from "./measurement-type";
 import {environment} from "../environments/environment";
 import {MsalService} from "@azure/msal-angular";
+import {DeviceType} from "./device-type";
 
 @Injectable({providedIn: 'root'})
 export class IoTService {
   private measurementUrl = '/weathersense-data/';
   private headers = {"x-ms-version": "2020-04-08"};
+
   constructor(private http: HttpClient, private msalService: MsalService) {
+  }
+
+  getDevices(): Observable<DeviceType[]> {
+    let url = this.getBlobUrl();
+    return new Observable<DeviceType[]>(subscriber => {
+      this.http.get(`${url}/weathersense-config/devices.txt`,
+        {
+          headers: this.headers,
+          responseType: "text"
+        }).subscribe(
+        {
+          next(str) {
+
+            let devs: DeviceType[] = str.split("\n")
+              .filter(s => s.length > 0)
+              .map(s => JSON.parse(s));
+            subscriber.next(devs);
+          },
+          complete() {
+            subscriber.complete();
+            console.log("getDevices completed");
+          }
+        });
+    });
   }
 
   getMeasurements(device: string, date: string): Observable<Record<string, Measurement[]>> {
     return this.getMeasurementsMulti([device], date)
   }
-  getMeasurementsMulti(devices: string[], date: string): Observable<Record<string, Measurement[]>> {
-    let blobUrl = environment.blobUrl;
+
+  getBlobUrl() {
     if (this.msalService.instance.getAllAccounts().length == 0) {
-      blobUrl = environment.publicBlobUrl;
+      return environment.publicBlobUrl;
+    } else {
+      return environment.blobUrl;
     }
+  }
+
+  getMeasurementsMulti(devices: string[], date: string): Observable<Record<string, Measurement[]>> {
+    let blobUrl = this.getBlobUrl();
     let numReturned: number = 0;
     return new Observable<Record<string, Measurement[]>>(subscriber => {
       for (const device of devices) {
@@ -30,101 +62,82 @@ export class IoTService {
           {
             headers: this.headers,
             responseType: "text"
-          }).subscribe(str => {
-          let epochToDate = function (epochSeconds: number) {
-            let d = new Date(0);
-            d.setUTCSeconds(epochSeconds);
-            return d;
+          }).subscribe({
+            next(str) {
+              let epochToDate = function (epochSeconds: number) {
+                let d = new Date(0);
+                d.setUTCSeconds(epochSeconds);
+                return d;
+              }
+              let measurements: Measurement[]
+              try {
+                measurements = str.split('\n')
+                  .filter(s => s.length != 0)
+                  .map<Measurement>(item => {
+                    let parsed = JSON.parse(item);
+                    parsed.ts = epochToDate(parsed.ts);
+                    return parsed;
+                  });
+              } catch (e) {
+                //2022-08-09T23:53:22.000000,  22.33,  97409.00, 41.55,     , 0       ,25.47,  19.19,
+                //2022-08-05T00:51:23.737603,  27.39,  966.87,   43.68, 0.54, 240000
+
+                let rows = str.split('\n');
+                let tmp = rows[0].split(',')
+                console.log("oldformat, cols=" + tmp.length);
+                console.log(tmp.map((s, i) => i + ": " + s).join(" "))
+
+                measurements = rows
+                  .filter(s => s.length != 0)
+                  .map<Measurement>(item => {
+                    let parsed = item.split(',');
+                    console.log(parsed.length)
+                    let meas!: Measurement;
+                    if (parsed.length === 9) {
+                      meas = {
+                        id: undefined,
+                        ts: new Date(parsed[0]),
+                        p: parseFloat(parsed[2]),
+                        h: parseFloat(parsed[3]),
+                        t1: parsed[6] ? parseFloat(parsed[6]) : undefined,
+                        t2: parsed[7] ? parseFloat(parsed[7]) : undefined,
+                      }
+                    }
+                    if (parsed.length === 6) {
+                      meas = {
+                        id: undefined,
+                        ts: new Date(parsed[0]),
+                        p: parseFloat(parsed[2]),
+                        h: parseFloat(parsed[3]),
+                        t1: parseFloat(parsed[1]),
+                        t2: undefined
+                      }
+                    } else {
+
+                    }
+                    return meas;
+                  });
+              }
+              let len = measurements.length;
+              console.log("got data:")
+              console.log(measurements[len - 1].ts);
+              console.log(measurements[len - 1]);
+              let result: any = {}
+              result[device] = measurements
+              subscriber.next(result);
+              numReturned += 1
+              if (numReturned == devices.length) {
+                subscriber.complete();
+              }
+
+            },
+            error(error) {
+              subscriber.error(error)
+            }
           }
-          let measurements: Measurement[]
-          try {
-            measurements = str.split('\n')
-              .filter(s => s.length != 0)
-              .map<Measurement>(item => {
-                let parsed = JSON.parse(item);
-                parsed.ts = epochToDate(parsed.ts);
-                return parsed;
-              });
-          } catch (e) {
-            //2022-08-09T23:53:22.000000,  22.33,  97409.00, 41.55,     , 0       ,25.47,  19.19,
-            //2022-08-05T00:51:23.737603,  27.39,  966.87,   43.68, 0.54, 240000
-
-            let rows = str.split('\n');
-            let tmp = rows[0].split(',')
-            console.log("oldformat, cols=" + tmp.length);
-            console.log(tmp.map((s, i) => i + ": " + s).join(" "))
-
-            measurements = rows
-              .filter(s => s.length != 0)
-              .map<Measurement>(item => {
-                let parsed = item.split(',');
-                console.log(parsed.length)
-                let meas!: Measurement;
-                if (parsed.length === 9) {
-                  meas = {
-                    id: undefined,
-                    ts: new Date(parsed[0]),
-                    p: parseFloat(parsed[2]),
-                    h: parseFloat(parsed[3]),
-                    t1: parsed[6] ? parseFloat(parsed[6]) : undefined,
-                    t2: parsed[7] ? parseFloat(parsed[7]) : undefined,
-                  }
-                }
-                if (parsed.length === 6) {
-                  meas = {
-                    id: undefined,
-                    ts: new Date(parsed[0]),
-                    p: parseFloat(parsed[2]),
-                    h: parseFloat(parsed[3]),
-                    t1: parseFloat(parsed[1]),
-                    t2: undefined
-                  }
-                } else {
-
-                }
-                return meas;
-              });
-          }
-          let len = measurements.length;
-          console.log("got data:")
-          console.log(measurements[len - 1].ts);
-          console.log(measurements[len - 1]);
-          let result: any = {}
-          result[device] = measurements
-          subscriber.next(result);
-          numReturned += 1
-          if(numReturned == devices.length) {
-            subscriber.complete();
-          }
-
-        }, error => {
-          subscriber.error(error)
-        });
+        );
       }
-
     });
-  }
-
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
-
-      // TODO: better job of transforming error for user consumption
-      this.log(`${operation} failed: ${error.message}`);
-
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
-  }
-
-  private log(message: string) {
-    console.log(`measurementservice: ${message}`);
-  }
-
-  getDevices(): string[] {
-    return environment.devices
   }
 
   getMeasurementTypes(): MeasurementType[] {

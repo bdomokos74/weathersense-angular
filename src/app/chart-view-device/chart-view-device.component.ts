@@ -15,48 +15,61 @@ export class ChartViewDeviceComponent implements OnInit {
   pipe = new DatePipe('en-US');
   private fmt: string = 'yyyyMMdd';
 
-  chartData: ChartData|undefined;
+  chartData: ChartData | undefined;
 
   measurements: Measurement[] = [];
 
-  devices = this.iotService.getDevices()
+  devices: string[] = []
   measTypes: MeasurementType[] = this.iotService.getMeasurementTypes()
 
   measDate: string = this.pipe.transform(new Date(), this.fmt) ?? "";
-  measDevice = this.devices[0];
+  measDevice: string|null = null;
 
   measType!: MeasurementType
-  measType2: MeasurementType|undefined = undefined
+  measType2: MeasurementType | undefined = undefined
 
   constructor(private iotService: IoTService) {
   }
 
   ngOnInit() {
+    let self = this;
     console.log("ngOnInit");
-    this.readMeasurements();
+    this.iotService.getDevices().subscribe({
+      next(devs) {
+        console.log("got devices: ", devs);
+        self.devices = devs.map(d => d.id);
+        self.measDevice = self.devices[0]
+        self.readMeasurements(self.measDevice);
+      },
+      complete() {
+        console.log("getdevices done");
+      }
+    });
+    //this.readMeasurements();
   }
 
-  private readMeasurements() {
+  private readMeasurements(measDevice: string) {
     let self = this
-    this.iotService.getMeasurements(this.measDevice, this.measDate)
-      .subscribe(
-        data => {
-          console.log("subs data:", data)
-          self.measurements = data[this.measDevice]
-        },
-        err => {
-          console.log("error:", err)
-          self.measurements = []
-        },
-        () => {
-          console.log('complete');
-          self.prepareData();
+    this.iotService.getMeasurements(measDevice, this.measDate)
+      .subscribe({
+          next(data) {
+            console.log("subs data:", data)
+            self.measurements = data[measDevice]
+          },
+          error(err) {
+            console.log("error:", err)
+            self.measurements = []
+          },
+          complete() {
+            console.log('complete');
+            self.prepareData();
+          }
         }
       );
   }
 
   private updateData() {
-    if(this.chartData) {
+    if (this.chartData) {
       //this.measurements = this.chartData.measurements
       this.prepareData()
     } else {
@@ -68,19 +81,21 @@ export class ChartViewDeviceComponent implements OnInit {
     let data = this.measurements;
     let leftSeries: TimeSeries[] = []
     let rightSeries: TimeSeries[] = []
-
-    leftSeries.push( TimeSeries.createTimeSerie(this.measDevice, data, 'ts', this.measType.code1, this.measType, "1"))
-    if( this.measType.code2) {
+    if (this.measDevice == null) {
+      return;
+    }
+    leftSeries.push(TimeSeries.createTimeSerie(this.measDevice, data, 'ts', this.measType.code1, this.measType, "1"));
+    if (this.measType.code2) {
       let serie2 = TimeSeries.createTimeSerie(this.measDevice, data, 'ts', this.measType.code2, this.measType, "1_1");
-      if(!serie2.empty)
+      if (!serie2.empty)
         leftSeries.push(serie2)
     }
 
-    if(this.measType2) {
-      rightSeries.push( TimeSeries.createTimeSerie(this.measDevice, data, 'ts', this.measType2.code1, this.measType2, "2"))
-      if( this.measType2.code2) {
+    if (this.measType2) {
+      rightSeries.push(TimeSeries.createTimeSerie(this.measDevice, data, 'ts', this.measType2.code1, this.measType2, "2"))
+      if (this.measType2.code2) {
         let serie2 = TimeSeries.createTimeSerie(this.measDevice, data, 'ts', this.measType2.code2, this.measType2, "2_1");
-        if(!serie2.empty)
+        if (!serie2.empty)
           rightSeries.push(serie2)
       }
     }
@@ -92,14 +107,17 @@ export class ChartViewDeviceComponent implements OnInit {
   }
 
   onMeasDate($event: Date) {
+    if (this.measDevice == null) {
+      return;
+    }
     this.measDate = this.pipe.transform($event, 'yyyyMMdd') ?? "";
-    this.readMeasurements()
+    this.readMeasurements(this.measDevice)
   }
 
   onSelectedDevice($event: string) {
     console.log("device change: ", $event)
     this.measDevice = $event
-    this.readMeasurements()
+    this.readMeasurements(this.measDevice)
   }
 
   onSelectedMeasurement($event: MeasurementType) {

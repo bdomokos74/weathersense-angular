@@ -26,9 +26,9 @@ export class ChartViewTimeComponent implements OnInit {
   constructor(private iotService: IoTService, private chartService: ChartService) {
   }
 
-  devices = this.iotService.getDevices()
-  measTypes: MeasurementType[] = this.iotService.getMeasurementTypes()
-  visibleDevices: Set<string> = new Set(this.devices)
+  devices: string[] = [];
+  measTypes: MeasurementType[] = this.iotService.getMeasurementTypes();
+  visibleDevices: Set<string> = new Set();//= new Set(this.devices)
 
   measDate: string = this.pipe.transform(new Date(), this.fmt) ?? ""
   measType!: MeasurementType
@@ -52,9 +52,20 @@ export class ChartViewTimeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    let self = this;
     this.isMobileView = this.isMobile(window.innerWidth);
+    this.iotService.getDevices().subscribe({
+      next(devs) {
+        let devices = devs.map(d => d.id);
+        self.devices = devices;
+        console.log("got devices, ", devs, devices);
+        self.readMeasurements(devices);
+      },
+      complete() {
+        console.log("getdevices done");
+      }
+    });
 
-    this.readMeasurements()
     this.chartService.chartEventListner().subscribe(msg => {
       console.log("chart view time got event:", msg)
       if (msg.eventType == 'hide') {
@@ -67,12 +78,12 @@ export class ChartViewTimeComponent implements OnInit {
     })
   }
 
-  private readMeasurements() {
-    let self = this
+  private readMeasurements(devices: string[]) {
+    console.log("readmeasurements: ", devices);
     this.data = {}
     this.numDataset = 0
-    this.iotService.getMeasurementsMulti(this.devices, this.measDate)
-      .pipe(catchError((err: any) => of(undefined)))
+    this.iotService.getMeasurementsMulti(devices, this.measDate)
+      .pipe(catchError(() => of(undefined)))
       .subscribe({
         next: (data) => {
           console.log("readmulti.next:", data);
@@ -81,10 +92,11 @@ export class ChartViewTimeComponent implements OnInit {
         },
         complete: () => {
           console.log('readmulti.complete=================');
-          self.prepareDataAll();
+          this.prepareDataAll();
         }
       });
   }
+
 
   private prepareDataAll() {
     let leftSeries: TimeSeries[] = []
@@ -128,17 +140,13 @@ export class ChartViewTimeComponent implements OnInit {
   private updateVisibilityArr(arr: TimeSeries[]) {
     for (let i = 0; i < arr.length; i++) {
       let series = arr[i]
-      if (this.visibleDevices.has(series.source)) {
-        series.visible = true
-      } else {
-        series.visible = false
-      }
+      series.visible = this.visibleDevices.has(series.source);
     }
   }
 
   onMeasDate($event: Date) {
     this.measDate = this.pipe.transform($event, 'yyyyMMdd') ?? ""
-    this.readMeasurements()
+    this.readMeasurements(this.devices)
   }
 
   onSelectedMeasurement($event: MeasurementType) {
