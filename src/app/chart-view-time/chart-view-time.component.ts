@@ -87,7 +87,7 @@ export class ChartViewTimeComponent implements OnInit {
 
   private prepareDataAll() {
     let leftSeries: TimeSeries[] = []
-    for (let i = 0; i < this.numDataset; i++) {
+    for (let i = 0; i < this.devices.length; i++) {
       if (this.data[this.devices[i]] !== undefined) {
 
         leftSeries.push(TimeSeries.createTimeSerie(this.devices[i], this.data[this.devices[i]], 'ts', this.measType.code1, this.measType, "" + (i + 1)))
