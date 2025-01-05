@@ -1,4 +1,5 @@
-<div class="row" *ngIf="!isMobileView; else mobileTimeChart">
+@if(!isMobileView) {
+<div class="row">
   <div class="col1">
     <app-chart-menu
       [showDeviceSelect]="false"
@@ -19,8 +20,7 @@
     </app-chart-legend>
   </div>
 </div>
-
-<ng-template #mobileTimeChart>
+} @else {
 
   <div class="singlecol">
     <app-time-chart [chartData]="chartData" [isMobile]="true">
@@ -42,4 +42,4 @@
     </app-chart-menu>
   </span>
 
-</ng-template>
+}

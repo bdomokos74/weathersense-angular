@@ -7,7 +7,9 @@ import {asyncScheduler, fromEvent, throttleTime} from "rxjs";
 @Component({
   selector: 'app-time-chart',
   templateUrl: './time-chart.component.html',
-  styleUrls: ['./time-chart.component.css']
+  styleUrls: ['./time-chart.component.css'],
+  standalone: true,
+  imports: []
 })
 export class TimeChartComponent implements OnInit {
   private margin = {top: 45, bottom: 15, left: 30, right: 0};

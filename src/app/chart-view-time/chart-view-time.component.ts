@@ -1,17 +1,27 @@
-import {Component, OnInit} from '@angular/core'
-import {ChartData} from "../chart-data"
-import {MeasurementType} from "../measurement-type"
-import {IoTService} from "../iot.service"
-import {DatePipe} from "@angular/common"
-import {Measurement} from "../measurement"
-import {TimeSeries} from "../timeseries"
-import {ChartService} from "../chart.service"
-import {catchError, of} from "rxjs";
+import { Component, OnInit } from '@angular/core'
+import { ChartData } from "../chart-data"
+import { MeasurementType } from "../measurement-type"
+import { IoTService } from "../iot.service"
+import { CommonModule, DatePipe } from "@angular/common"
+import { MeasKey, Measurement } from "../measurement"
+import { TimeSeries } from "../timeseries"
+import { ChartService } from "../chart.service"
+import { catchError, of } from "rxjs";
+import { ChartMenuComponent } from '../chart-menu/chart-menu.component'
+import { ChartLegendComponent } from '../chart-legend/chart-legend.component'
+import { TimeChartComponent } from '../time-chart/time-chart.component'
 
 @Component({
   selector: 'app-chart-view-time',
   templateUrl: './chart-view-time.component.html',
-  styleUrls: ['./chart-view-time.component.css']
+  styleUrls: ['./chart-view-time.component.css'],
+  standalone: true,
+  imports: [
+    ChartMenuComponent,
+    ChartLegendComponent,
+    TimeChartComponent,
+    CommonModule
+  ]
 })
 export class ChartViewTimeComponent implements OnInit {
   pipe = new DatePipe('en-US')
@@ -42,7 +52,7 @@ export class ChartViewTimeComponent implements OnInit {
 
   ngOnInit(): void {
     let self = this;
-    this.isMobileView = ( window.innerWidth <= 820);
+    this.isMobileView = (window.innerWidth <= 820);
     console.log("isMobile=" + this.isMobileView + " " + window.innerWidth);
     this.iotService.getDevices().subscribe({
       next(devs) {
@@ -70,7 +80,7 @@ export class ChartViewTimeComponent implements OnInit {
     this.data = {}
     this.numDataset = 0
     this.iotService.getMeasurementsMulti(devices, this.measDate)
-      .pipe(catchError(() => of({})))
+      //.pipe(catchError(() => of({})))
       .subscribe({
         next: (data) => {
           console.log("readmulti.next:", data);
@@ -86,16 +96,26 @@ export class ChartViewTimeComponent implements OnInit {
 
 
   private prepareDataAll() {
-    let leftSeries: TimeSeries[] = []
-    for (let i = 0; i < this.devices.length; i++) {
-      if (this.data[this.devices[i]] !== undefined) {
+    let leftSeries: TimeSeries[] = [];
+    console.log("prep all", this.devices, this.measType);
+    try {
+      for (let i = 0; i < this.devices.length; i++) {
+        if (this.data[this.devices[i]] !== undefined) {
 
-        leftSeries.push(TimeSeries.createTimeSerie(this.devices[i], this.data[this.devices[i]], 'ts', this.measType.code1, this.measType, "" + (i + 1)))
-        if (this.measType.code2) {
-          let serie2 = TimeSeries.createTimeSerie(this.devices[i], this.data[this.devices[i]], 'ts', this.measType.code2, this.measType, "" + (i + 1) + "_1")
-          if (!serie2.empty)
-            leftSeries.push(serie2)
+          leftSeries.push(TimeSeries.createTimeSerie(this.devices[i], this.data[this.devices[i]], 'ts', this.measType.code1 as MeasKey, this.measType, "" + (i + 1), this.measType.maxVal))
+
+          if (this.measType.code2) {
+            let serie2 = TimeSeries.createTimeSerie(this.devices[i], this.data[this.devices[i]], 'ts', this.measType.code2 as MeasKey, this.measType, "" + (i + 1) + "_1", this.measType.maxVal)
+            if (!serie2.empty)
+              leftSeries.push(serie2)
+          }
         }
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log("prep error: ", error?.message);
+      } else {
+        console.log("prep error: ", error);
       }
     }
     this.chartData = {

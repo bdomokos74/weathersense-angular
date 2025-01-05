@@ -6,11 +6,13 @@
       </a>
     </button>
 
-    <button *ngIf="loginDisplay" class="white md-36" aria-label="Thermostat charts">
+    @if(loginDisplay) {
+    <button class="white md-36" aria-label="Thermostat charts">
       <a [routerLink]="['/device-view']">
         <mat-icon>thermostat</mat-icon>
       </a>
     </button>
+    }
 
     <button class="white md-36" aria-label="Charts">
       <a [routerLink]="['/chart-view-device']">
@@ -26,16 +28,17 @@
 
     <span class="row-middle"></span>
 
-    <button *ngIf="loginDisplay" class="white md-36" aria-label="Example icon-button with share icon">
+    @if(loginDisplay) {
+    <button class="white md-36" aria-label="Example icon-button with share icon">
       <a [routerLink]="['/profile']">
         <mat-icon>account_circle</mat-icon>
       </a>
     </button>
-
-    <button *ngIf="!loginDisplay" class="white md-36" aria-label="Example icon-button with share icon"
+    } @else {
+    <button class="white md-36" aria-label="Example icon-button with share icon"
             (click)="login()">
       <mat-icon>login</mat-icon>
     </button>
-
+    }
   </mat-toolbar-row>
 </mat-toolbar>

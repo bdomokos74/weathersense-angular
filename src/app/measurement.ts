@@ -7,3 +7,5 @@ export interface Measurement {
   h: number,
   p: number
 }
+
+export type MeasKey = keyof Measurement;

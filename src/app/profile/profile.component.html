@@ -1,10 +1,13 @@
-<div *ngIf="!profile">
+@if(!profile) {
+<div>
   <p>NO PROFILE</p>
 </div>
-<div *ngIf="profile">
+} @else {
+<div>
   <p><strong>First Name: </strong> {{profile.givenName}}</p>
   <p><strong>Last Name: </strong> {{profile.surname}}</p>
   <p><strong>Email: </strong> {{profile.userPrincipalName}}</p>
   <p><strong>Id: </strong> {{profile.id}}</p>
   <button type="button" (click)="signOut()">Sign Out</button>
 </div>
+}

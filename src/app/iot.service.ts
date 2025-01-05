@@ -16,15 +16,17 @@ export class IoTService {
   }
 
   getDevices(): Observable<DeviceType[]> {
-    let url = this.getBlobUrl();
+    let url = `${this.getBlobUrl()}/weathersense-config/devices.txt`;
+    console.log("requesting:"+ url);
     return new Observable<DeviceType[]>(subscriber => {
-      this.http.get(`${url}/weathersense-config/devices.txt`,
+      this.http.get(url,
         {
           headers: this.headers,
           responseType: "text"
         }).subscribe(
         {
           next(str) {
+            console.log("devs"+ str);
             let devs: DeviceType[] = str.split("\n")
               .filter(s => s.length > 0)
               .map(s => {
@@ -44,11 +46,12 @@ export class IoTService {
                   tags: tags
                 }
               });
+              
             subscriber.next(devs);
           },
           complete() {
-            subscriber.complete();
             console.log("getDevices completed");
+            subscriber.complete();
           }
         });
     });
@@ -146,8 +149,12 @@ export class IoTService {
               }
 
             },
-            error() {
+            error(err) {
+              console.log("readmulti err", err);
               numReturned += 1;
+              if (numReturned == devices.length) {
+                subscriber.complete();
+              }
             }
           }
         );
@@ -157,7 +164,7 @@ export class IoTService {
 
   getMeasurementTypes(): MeasurementType[] {
     return [
-      {name: 'Temperature', code1: 't1', code2: 't2', unit: '°C'},
+      {name: 'Temperature', code1: 't1', code2: 't2', unit: '°C', maxVal: 70},
       {name: 'Pressure', code1: 'p', code2: undefined, unit: 'hPa'},
       {name: 'Humidity', code1: 'h', code2: undefined, unit: '%'},
       {name: 'Radiation', code1: 'cpm', code2: undefined, unit: 'cpm'}];

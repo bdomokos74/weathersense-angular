@@ -1,6 +1,8 @@
 <app-top-bar></app-top-bar>
 
 <div class="container">
-  <router-outlet *ngIf="!isIframe"></router-outlet>
+  @if (!isIframe) {
+  <router-outlet></router-outlet>
+  }
 </div>
 

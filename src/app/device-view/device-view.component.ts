@@ -1,7 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {IoTService} from "../iot.service";
-import * as moment from "moment/moment";
+import { MatTableModule } from '@angular/material/table';
+import { DateTime } from 'luxon';
+
 @Component({
   selector: 'app-device-view',
   templateUrl: './device-view.component.html',
@@ -12,6 +14,10 @@ import * as moment from "moment/moment";
       state('expanded', style({height: '*'})),
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ])
+  ],
+  standalone: true,
+  imports: [
+    MatTableModule
   ]
 })
 
@@ -54,6 +60,7 @@ export class DeviceViewComponent implements OnInit {
     let self = this;
     this.iotService.getDevices().subscribe({
       next(devs) {
+        console.log("got dev: "+devs);
         self.devices = devs.map( d => {return {
           id: d.id,
           status: d.status,
@@ -64,10 +71,10 @@ export class DeviceViewComponent implements OnInit {
           measureBatchSize: d.reportedProperties.measureBatchSize,
           measureIntervalMs: d.reportedProperties.measureBatchSize,
           sleepTimeSec: d.reportedProperties.sleepTimeSec,
-          lastUpdated: moment( new Date().getTime()).format('YYYY-MM-DD HH:mm'),
+          lastUpdated: DateTime.now().toFormat('f'),
           location: d.tags?.location
         }});
-        console.log("got devices, ", devs);
+
       }
     });
   }

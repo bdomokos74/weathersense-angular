@@ -1,11 +1,18 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {TimeSeries} from "../../timeseries";
 import {ChartService} from "../../chart.service";
+import {CommonModule, NgClass} from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-serie-card',
   templateUrl: './serie-card.component.html',
-  styleUrls: ['./serie-card.component.css']
+  styleUrls: ['./serie-card.component.css'],
+  standalone: true,
+  imports: [
+    MatIconModule,
+    CommonModule
+  ]
 })
 export class SerieCardComponent implements OnInit {
 

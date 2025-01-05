@@ -4,7 +4,9 @@ import * as d3 from "d3";
 @Component({
   selector: 'app-chart-experiment',
   templateUrl: './chart-experiment.component.html',
-  styleUrls: ['./chart-experiment.component.css']
+  styleUrls: ['./chart-experiment.component.css'],
+  standalone: true,
+  imports: []
 })
 export class ChartExperimentComponent implements OnInit {
 

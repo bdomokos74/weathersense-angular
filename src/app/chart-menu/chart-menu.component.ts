@@ -1,12 +1,30 @@
-import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
-import {FormControl} from "@angular/forms";
-import * as moment from 'moment';
-import {MeasurementType} from "../measurement-type";
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { DateTime } from 'luxon';
+import { MeasurementType } from "../measurement-type";
+import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
+import { CommonModule } from '@angular/common';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-chart-menu',
   templateUrl: './chart-menu.component.html',
-  styleUrls: ['./chart-menu.component.css']
+  styleUrls: ['./chart-menu.component.css'],
+  standalone: true,
+  imports: [
+    MatLabel,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    CommonModule
+  ]
 })
 export class ChartMenuComponent implements OnInit {
   constructor() { }
@@ -82,7 +100,7 @@ export class ChartMenuComponent implements OnInit {
   @Output()
   selectedMeasurement = new EventEmitter<MeasurementType>();
 
-  selectedMeasurementVal2: MeasurementType|undefined = undefined
+  selectedMeasurementVal2: MeasurementType | undefined = undefined
   get _selectedMeasurement2() {
     return this.selectedMeasurementVal2
   }
@@ -105,18 +123,21 @@ export class ChartMenuComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   changeDateHotkey(event: any) {
-    let change: number|undefined = undefined
+    let change: number | undefined = undefined
     if (event.key === 'ArrowLeft') {
       change = -1
     } else if (event.key === 'ArrowRight') {
       change = 1
     }
-    if(change) {
-      let d = moment(this._measDate.getRawValue(), 'YYYYMMDD').add(change, 'day')
-      let date = new Date(d.format('MM/DD/YYYY'));
-      this._measDate.setValue(date)
-      console.log("left newdate", this.measDate)
-      this.measDate.emit(date);
+    if (change) {
+      let newdate = this._measDate?.getRawValue();
+      if (newdate) {
+        let d = DateTime.fromJSDate(newdate).plus({ days: change });
+        let date = d.toJSDate();
+        this._measDate.setValue(date)
+        console.log("left newdate", this.measDate)
+        this.measDate.emit(date);
+      }
     }
   }
 }

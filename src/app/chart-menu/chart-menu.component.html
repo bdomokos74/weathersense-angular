@@ -8,7 +8,8 @@
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
-    <mat-form-field *ngIf="showDeviceSelect" class="form-full-width" appearance="fill">
+    @if(showDeviceSelect) {
+    <mat-form-field class="form-full-width" appearance="fill">
       <mat-label>Device</mat-label>
       <mat-select [(ngModel)]="_selectedDevice">
         <mat-option *ngFor="let d of devices" [value]="d">
@@ -16,6 +17,7 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+    }
 
     <mat-form-field class="form-full-width" appearance="fill">
       <mat-label>Measurement</mat-label>
@@ -27,7 +29,8 @@
     </mat-form-field>
   </div>
 
-  <mat-form-field *ngIf="showMeasurement2Select"  class="form-full-width" appearance="fill">
+  @if(showMeasurement2Select) {
+  <mat-form-field class="form-full-width" appearance="fill">
     <mat-label>Device2</mat-label>
     <mat-select [(ngModel)]="_selectedDevice2">
       <mat-option value=""></mat-option>
@@ -36,8 +39,8 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-
-  <mat-form-field *ngIf="showMeasurement2Select"  class="form-full-width" appearance="fill">
+  
+  <mat-form-field class="form-full-width" appearance="fill">
     <mat-label>Measurement2</mat-label>
     <mat-select [(ngModel)]="_selectedMeasurement2">
       <mat-option value=""></mat-option>
@@ -46,6 +49,7 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
+  }
 
   <div>
     {{_measDate.getRawValue()| date: 'YYYYMMdd HH:mm'}}

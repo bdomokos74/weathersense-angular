@@ -3,4 +3,5 @@ export interface MeasurementType {
   code1: string,
   code2: string|undefined,
   unit: string
+  maxVal?: number
 }

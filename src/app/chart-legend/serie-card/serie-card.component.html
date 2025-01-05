@@ -1,10 +1,9 @@
-
 <div class="container badge-border{{this.serie.color}}" >
-  <div (click)="headerClicked()" [ngClass]="{'gray': grayedOut}" class="item-header badge-sensor{{this.serie.color}}">{{ serie.source }} / {{serie.code}}</div>
+  <div (click)="headerClicked()" [ngClass]="{'gray': grayedOut}" class="item-header badge-sensor{{serie.color}}">{{ serie.source }} / {{serie.code}}</div>
   <div class="item-curr">{{serie.yCurr}}{{serie.type.unit}}</div>
   <div class="item-curr-time">{{serie.yCurrTime}}</div>
-  <div class="item-lo"><mat-icon class="meas-col{{this.serie.color}}">arrow_downward</mat-icon><span>{{serie.yMin}}{{serie.type.unit}}</span></div>
+  <div class="item-lo"><mat-icon class="meas-col{{serie.color}}">arrow_downward</mat-icon><span>{{serie.yMin}}{{serie.type.unit}}</span></div>
   <div class="item-lo-time">{{serie.yMinTime}}</div>
-  <div class="item-hi"><mat-icon class="meas-col{{this.serie.color}}">arrow_upward</mat-icon>{{serie.yMax}}{{serie.type.unit}}</div>
+  <div class="item-hi"><mat-icon class="meas-col{{serie.color}}">arrow_upward</mat-icon>{{serie.yMax}}{{serie.type.unit}}</div>
   <div class="item-hi-time">{{serie.yMaxTime}}</div>
 </div>

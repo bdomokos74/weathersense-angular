@@ -1,10 +1,24 @@
+import { CommonModule } from '@angular/common';
 import {Component, OnInit} from '@angular/core';
+import { MatLabel } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule, MatToolbarRow } from '@angular/material/toolbar';
+import { RouterModule } from '@angular/router';
 import {MsalBroadcastService, MsalService} from "@azure/msal-angular";
 
 @Component({
   selector: 'app-top-bar',
   templateUrl: './top-bar.component.html',
-  styleUrls: ['./top-bar.component.css']
+  styleUrls: ['./top-bar.component.css'],
+  standalone: true,
+  imports: [
+    RouterModule,
+    MatLabel,
+    MatIconModule,
+    MatToolbarModule,
+    MatToolbarRow,
+    CommonModule
+  ]
 })
 export class TopBarComponent implements OnInit {
   isIframe = false;

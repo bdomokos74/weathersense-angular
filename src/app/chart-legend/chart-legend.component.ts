@@ -1,11 +1,18 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ChartData} from "../chart-data";
 import {TimeSeries} from "../timeseries";
+import { SerieCardComponent } from './serie-card/serie-card.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-chart-legend',
   templateUrl: './chart-legend.component.html',
-  styleUrls: ['./chart-legend.component.css']
+  styleUrls: ['./chart-legend.component.css'],
+  standalone: true,
+  imports: [
+    SerieCardComponent,
+    CommonModule
+  ]
 })
 export class ChartLegendComponent implements OnInit {
 

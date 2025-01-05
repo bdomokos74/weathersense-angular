@@ -1,15 +1,25 @@
 import {Component, OnInit} from '@angular/core';
-import {Measurement} from "../measurement";
+import {MeasKey, Measurement} from "../measurement";
 import {IoTService} from "../iot.service";
-import {DatePipe} from "@angular/common";
+import {CommonModule, DatePipe} from "@angular/common";
 import {MeasurementType} from "../measurement-type";
 import {TimeSeries} from "../timeseries";
 import {ChartData} from "../chart-data";
+import { ChartMenuComponent } from '../chart-menu/chart-menu.component';
+import { TimeChartComponent } from '../time-chart/time-chart.component';
+import { ChartLegendComponent } from '../chart-legend/chart-legend.component';
 
 @Component({
   selector: 'app-chart-view-device',
   templateUrl: './chart-view-device.component.html',
-  styleUrls: ['./chart-view-device.component.css']
+  styleUrls: ['./chart-view-device.component.css'],
+  standalone: true,
+  imports: [
+    ChartMenuComponent,
+    ChartLegendComponent,
+    TimeChartComponent,
+    CommonModule
+  ]
 })
 export class ChartViewDeviceComponent implements OnInit {
   pipe = new DatePipe('en-US');
@@ -88,17 +98,17 @@ export class ChartViewDeviceComponent implements OnInit {
     if (this.measDevice == null) {
       return;
     }
-    leftSeries.push(TimeSeries.createTimeSerie(this.measDevice, this.data[this.measDevice], 'ts', this.measType.code1, this.measType, "1"));
+    leftSeries.push(TimeSeries.createTimeSerie(this.measDevice, this.data[this.measDevice], 'ts', this.measType.code1 as MeasKey, this.measType, "1"));
     if (this.measType.code2) {
-      let serie2 = TimeSeries.createTimeSerie(this.measDevice, this.data[this.measDevice], 'ts', this.measType.code2, this.measType, "1_1");
+      let serie2 = TimeSeries.createTimeSerie(this.measDevice, this.data[this.measDevice], 'ts', this.measType.code2 as MeasKey, this.measType, "1_1");
       if (!serie2.empty)
         leftSeries.push(serie2)
     }
-
+  
     if (this.measType2 && this.measDevice2) {
-      rightSeries.push(TimeSeries.createTimeSerie(this.measDevice2, this.data[this.measDevice2], 'ts', this.measType2.code1, this.measType2, "2"))
+      rightSeries.push(TimeSeries.createTimeSerie(this.measDevice2, this.data[this.measDevice2], 'ts', this.measType2.code1 as MeasKey, this.measType2, "2"))
       if (this.measType2.code2) {
-        let serie2 = TimeSeries.createTimeSerie(this.measDevice2, this.data[this.measDevice2], 'ts', this.measType2.code2, this.measType2, "2_1");
+        let serie2 = TimeSeries.createTimeSerie(this.measDevice2, this.data[this.measDevice2], 'ts', this.measType2.code2 as MeasKey, this.measType2, "2_1");
         if (!serie2.empty)
           rightSeries.push(serie2)
       }

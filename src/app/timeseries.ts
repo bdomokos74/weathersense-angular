@@ -1,7 +1,7 @@
-import {MeasurementType} from "./measurement-type";
-import {Measurement} from "./measurement";
+import { MeasurementType } from "./measurement-type";
+import { MeasKey, Measurement } from "./measurement";
 import * as d3 from "d3";
-import * as moment from 'moment';
+import { DateTime } from 'luxon';
 
 export interface Range {
   min: number,
@@ -24,8 +24,7 @@ export class TimeSeries {
     empty: boolean,
     color: string,
     measData: Measurement[]
-  )
-  {
+  ) {
     this.source = source;
     this.type = type;
     this.xDomain = xDomain;
@@ -45,7 +44,7 @@ export class TimeSeries {
   private xScale: any;
   private yScale: any;
 
-  measData: Measurement[]|undefined
+  measData: Measurement[] | undefined
 
   type: MeasurementType
   xDomain: number[]
@@ -54,49 +53,50 @@ export class TimeSeries {
   empty: boolean
   color: string
   source: string
-  yMin: string|undefined
-  yMax: string|undefined
-  yCurr: string|undefined
-  yMinTime: string|undefined
-  yMaxTime: string|undefined
-  yCurrTime: string|undefined
+  yMin: string | undefined
+  yMax: string | undefined
+  yCurr: string | undefined
+  yMinTime: string | undefined
+  yMaxTime: string | undefined
+  yCurrTime: string | undefined
   visible: boolean
 
-  static createTimeSerie(source: string, measData: Measurement[], ts: string, code: string, type: MeasurementType, color: string) :TimeSeries {
-    let tsMapper: any = (obj: any) => obj[ts];
-    let yMapper: any = (obj: any) => obj[code];
+  static createTimeSerie(source: string, measData: Measurement[], ts: string, code: MeasKey, type: MeasurementType, color: string, maxVal?: number): TimeSeries {
+    let tsMapper: any = (obj: Measurement) => obj.ts.getTime();
+    let yMapper: any = (obj: Measurement) => obj[code];
+
 
     const X: number[] = d3.map(measData, tsMapper);
 
     const Y: number[] = d3.map(measData, yMapper);
 
-    const defined = (d: any, i: any) => X[i]!==undefined && Y[i]!==undefined && !isNaN(Y[i])
+    const defined = (d: any, i: any) => X[i] !== undefined && Y[i] !== undefined && !isNaN(Y[i]) && (!maxVal || Y[i]<maxVal)
 
     const xDomain: any = d3.extent(X);
-    let yDomain: any = d3.extent(Y);
 
-
+    // trim in case of erroneous measurement value, higher than the expected max
+    let yDomain: any = d3.extent(Y.filter(defined));
 
     // const xScale = d3.scaleTime().domain(xDomain).range([xRange.min, xRange.max]);//.interpolate(d3.interpolateRound);
     // const yScale = d3.scaleLinear().domain(yDomain).range([yRange.min, yRange.max]);
 
-    let empty = Y.filter( (item: any) => item!=undefined).length==0
+    let empty = Y.filter((item: any) => item != undefined).length == 0
 
     let result = new TimeSeries(source, type, xDomain, yDomain, tsMapper, yMapper, defined, code, empty, color, measData);
-    if(empty) return result
+    if (empty) return result
 
     let maxIndex = d3.maxIndex(Y)
     let minIndex = d3.minIndex(Y)
     let yMin = Y[minIndex]
     let yMax = Y[maxIndex]
-    let yCurr = Y[Y.length-1]
-    result.yMinTime = moment(X[minIndex]).format('HH:mm')
-    result.yMaxTime = moment(X[maxIndex]).format('HH:mm')
-    result.yCurrTime = moment(X[X.length-1]).format('HH:mm')
+    let yCurr = Y[Y.length - 1]
+    result.yMinTime = DateTime.fromMillis(X[minIndex]).toFormat('HH:mm')
+    result.yMaxTime = DateTime.fromMillis(X[maxIndex]).toFormat('HH:mm')
+    result.yCurrTime = DateTime.fromMillis(X[X.length - 1]).toFormat('HH:mm')
 
     let digits = 2
-    if(type.name==='Pressure') {
-      if(yMax>10000) {
+    if (type.name === 'Pressure') {
+      if (yMax > 10000) {
         yMin /= 100
         yMax /= 100
         yCurr /= 100

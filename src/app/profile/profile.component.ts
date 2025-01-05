@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {MsalService} from "@azure/msal-angular";
+import { CommonModule } from '@angular/common';
 
 const GRAPH_ENDPOINT = 'https://graph.microsoft.com/v1.0/me';
 
@@ -14,7 +15,11 @@ type ProfileType = {
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  styleUrls: ['./profile.component.css'],
+  standalone: true,
+  imports: [
+    CommonModule
+  ]
 })
 export class ProfileComponent implements OnInit {
   profile: ProfileType|null = null;
