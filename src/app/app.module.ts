@@ -37,7 +37,7 @@ protectedResourceMap.set('https://graph.microsoft.com/v1.0/me', ['https://graph.
 //protectedResourceMap.set('https://graph.microsoft-ppe.com/v1.0/me', ['user.read']);
 protectedResourceMap.set(`${environment.blobUrl}/weathersense-config`, ['https://storage.azure.com/.default']);
 protectedResourceMap.set(`${environment.blobUrl}/weathersense-data`, ['https://storage.azure.com/.default']);
-protectedResourceMap.set(`${environment.iotHubUrl}/devices`, ['https://iothubs.azure.net/.default']);
+protectedResourceMap.set(`device-view`, ['api://5ee20736-5cc8-4466-acac-fe2062a9a1a7/WS.Admin']);
 
 export function loggerCallback(logLevel: LogLevel, message: string) {
   console.log(message);

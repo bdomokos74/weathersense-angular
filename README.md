@@ -102,12 +102,29 @@ https://docs.microsoft.com/en-us/azure/active-directory/develop/msal-client-appl
 
 https://docs.microsoft.com/en-us/azure/active-directory/develop/tutorial-v2-angular-auth-code
 
-https://mater`ial.angular.io/components/table/examples#table-http
-`
+https://material.angular.io/components/table/examples#table-http
+
+### Azure App Roles
+
+* In App Registrations / App roles create an app role
+* Go to the corresponding Enterprise Application, select Users and groups. Add user/group, then select the user, then select the role created in the first step.
+* Update Token configuration
+
+https://github.com/MicrosoftDocs/azure-docs/blob/main/articles/active-directory/develop/howto-add-app-roles-in-azure-ad-apps.md
+
+https://github.com/Azure-Samples/active-directory-aspnetcore-webapp-openidconnect-v2/blob/master/4-WebApp-your-API/4-1-MyOrg/README.md
+
+https://learn.microsoft.com/en-us/azure/active-directory/develop/howto-add-app-roles-in-azure-ad-apps
+
+https://github.com/AzureAD/microsoft-authentication-library-for-js
+
+https://learn.microsoft.com/en-us/azure/active-directory/develop/id-tokens
+
+https://github.com/Azure-Samples/ms-identity-javascript-angular-tutorial/blob/main/5-AccessControl/1-call-api-roles/SPA/src/app/auth-config.ts
+
+https://learn.microsoft.com/en-gb/azure/active-directory/develop/v2-oauth2-auth-code-flow
 
 ### Scratchpad
-
-
 
 #### IoT HUB query
 
