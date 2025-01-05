@@ -10,7 +10,7 @@ import {MatTableModule} from "@angular/material/table";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatIconModule} from "@angular/material/icon";
 import {MatSortModule} from "@angular/material/sort";
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import {BrowserCacheLocation, InteractionType, LogLevel, PublicClientApplication,} from '@azure/msal-browser';
 import {MsalBroadcastService, MsalGuard, MsalInterceptor, MsalModule, MsalService,} from '@azure/msal-angular';
 import {ChartViewDeviceComponent} from './chart-view-device/chart-view-device.component';
@@ -43,82 +43,72 @@ export function loggerCallback(logLevel: LogLevel, message: string) {
   console.log(message);
 }
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    TopBarComponent,
-    ChartLegendComponent,
-    DeviceViewComponent,
-    ProfileComponent,
-    ChartViewDeviceComponent,
-    ChartMenuComponent,
-    TimeChartComponent,
-    SerieCardComponent,
-    ChartExperimentComponent,
-    ChartViewDeviceComponent,
-    ChartViewTimeComponent,
-    LoginFailedComponent,
-    HomeComponent
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    MatSortModule,
-    MatTableModule,
-    MatToolbarModule,
-    MatIconModule,
-    HttpClientModule,
-    MatInputModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatSelectModule,
-    ReactiveFormsModule,
-    FormsModule,
-    MatButtonModule,
-    AppRoutingModule,
-    MsalModule.forRoot(
-      new PublicClientApplication({
-        auth: {
-          clientId: environment.clientId, // PPE testing environment
-          authority: `https://login.microsoftonline.com/${environment.tenantId}`, //
-          redirectUri: environment.baseUrl,
-          postLogoutRedirectUri: '/'
+@NgModule({ declarations: [
+        AppComponent,
+        TopBarComponent,
+        ChartLegendComponent,
+        DeviceViewComponent,
+        ProfileComponent,
+        ChartViewDeviceComponent,
+        ChartMenuComponent,
+        TimeChartComponent,
+        SerieCardComponent,
+        ChartExperimentComponent,
+        ChartViewDeviceComponent,
+        ChartViewTimeComponent,
+        LoginFailedComponent,
+        HomeComponent
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        BrowserAnimationsModule,
+        MatSortModule,
+        MatTableModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatInputModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatSelectModule,
+        ReactiveFormsModule,
+        FormsModule,
+        MatButtonModule,
+        AppRoutingModule,
+        MsalModule.forRoot(new PublicClientApplication({
+            auth: {
+                clientId: environment.clientId, // PPE testing environment
+                authority: `https://login.microsoftonline.com/${environment.tenantId}`, //
+                redirectUri: environment.baseUrl,
+                postLogoutRedirectUri: '/'
+            },
+            cache: {
+                cacheLocation: BrowserCacheLocation.LocalStorage,
+                storeAuthStateInCookie: isIE, // set to true for IE 11. Remove this line to use Angular Universal
+            },
+            system: {
+                loggerOptions: {
+                    loggerCallback,
+                    logLevel: LogLevel.Verbose,
+                    piiLoggingEnabled: false
+                }
+            }
+        }), {
+            interactionType: InteractionType.Popup,
+            authRequest: {
+                scopes: ['user.read']
+            },
+            loginFailedRoute: '/login-failed'
+        }, {
+            interactionType: InteractionType.Popup,
+            protectedResourceMap
+        })], providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: MsalInterceptor,
+            multi: true
         },
-        cache: {
-          cacheLocation: BrowserCacheLocation.LocalStorage,
-          storeAuthStateInCookie: isIE, // set to true for IE 11. Remove this line to use Angular Universal
-        },
-        system: {
-          loggerOptions: {
-            loggerCallback,
-            logLevel: LogLevel.Verbose,
-            piiLoggingEnabled: false
-          }
-        }
-      }),
-      {
-        interactionType: InteractionType.Popup,
-        authRequest: {
-          scopes: ['user.read']
-        },
-        loginFailedRoute: '/login-failed'
-      },
-      {
-        interactionType: InteractionType.Popup,
-        protectedResourceMap
-      }
-    )
-  ],
-  providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: MsalInterceptor,
-      multi: true
-    },
-    MsalService,
-    MsalGuard,
-    MsalBroadcastService
-  ],
-  bootstrap: [AppComponent]
-})
+        MsalService,
+        MsalGuard,
+        MsalBroadcastService,
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class AppModule {}
