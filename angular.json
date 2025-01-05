@@ -80,11 +80,11 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "weathersense-angular:build:production"
+              "buildTarget": "weathersense-angular:build:production"
             },
             "development": {
-              "browserTarget": "weathersense-angular:build:development",
-              "proxyConfig": "./proxy.conf.json"
+              "proxyConfig": "./proxy.conf.json",
+              "buildTarget": "weathersense-angular:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -92,7 +92,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "weathersense-angular:build"
+            "buildTarget": "weathersense-angular:build"
           }
         },
         "test": {
