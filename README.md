@@ -9,63 +9,33 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The appli
 
 Run `ng g component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-### Compressing and build
+### Compressing, build and deploy SPA
 
-Might need: 
+Need to set Content-encoding of the zipped files to GZip.
 
 ```
+# prereq
 npm install gzipper --save-dev
-```
 
-Also set Content-encoding of the zipped files to GZip.
-
-```bash
+# adds version string
 npm run prebuild
-npm run build-compress
-$result = az storage blob upload-batch -s .\dist-compressed\weathersense-angular\browser -d '$web' --account-name weathersensegui --overwrite
+
+npm run build-compress 
+
+# for test build
+#npm run build-test-compress 
+
+$AZURE_GUI_STORAGE_ACCOUNT = 'weathersenseguitest'
+$result = az storage blob upload-batch -s .\dist-compressed\weathersense-angular\browser -d '$web' --account-name $AZURE_GUI_STORAGE_ACCOUNT --overwrite
 $fileList = $result | jq '.[].Blob'
 
-# TODO
 foreach($f in $fileList) {
-az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n $f  
- }
-
-az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n main.ea10f696f309f18a.js
-az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n styles.ee8bbc17a1a0c0ea.css
-az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n main.ff9a5dc28e23e64e.js
-az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n index.html
-az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n polyfills.24cbda400234e41e.js
-az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n runtime.f7249a53dc95b10f.js
-```
-
-
-az storage blob update --account-name weathersensegui -c '$web' --content-encoding GZip -n chunk-42NE2CY3.js
-az storage blob update --account-name weathersensegui -c '$web' --content-encoding GZip -n chunk-Q2FBJJVH.js
-az storage blob update --account-name weathersensegui -c '$web' --content-encoding GZip -n index.html
-az storage blob update --account-name weathersensegui -c '$web' --content-encoding GZip -n main-LP7G47IW.js
-az storage blob update --account-name weathersensegui -c '$web' --content-encoding GZip -n polyfills-FFHMD2TL.js
-az storage blob update --account-name weathersensegui -c '$web' --content-encoding GZip -n styles-SFLE7SSE.css
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
-
-### How to deploy the SPA
-
-```bash
-# for prod:
-az storage blob upload-batch -s dist-compressed/weathersense-angular -d '$web' --account-name $AZURE_GUI_STORAGE_ACCOUNT
-
-# for test:
-az storage blob upload-batch -s dist/weathersense-angular -d '$web' --account-name $AZURE_GUI_TEST_STORAGE_ACCOUNT
+  $full=$f -replace '.*/', ''
+  $full=$full -replace '"', ''
+  $cmd="az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '`$web' --content-encoding GZip -n $full"
+  write-host "Calling $cmd"
+  invoke-expression $cmd
+}
 ```
 
 ### Export devices
@@ -95,7 +65,6 @@ npm install d3 && npm install @types/d3 --save-dev
 ```
 
 ### Notes
-
 
 https://docs.microsoft.com/en-us/azure/active-directory/develop/msal-client-application-configuration
 
