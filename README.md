@@ -1,6 +1,5 @@
 # WeathersenseAngular2
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.1.1.
 
 ## Development server
 
@@ -10,42 +9,42 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The appli
 
 Run `ng g component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-```bash
-ng build --configuration test
-ng build --prod
-```
-
 ### Compressing and build
 
+Might need: 
+
 ```
-npm run build-compress
+npm install gzipper --save-dev
 ```
 
-Also need to set Content-encoding of the zipped files to GZip
+Also set Content-encoding of the zipped files to GZip.
 
 ```bash
 npm run prebuild
 npm run build-compress
-$result = az storage blob upload-batch -s .\dist-compressed\weathersense-angular\ -d '$web' --account-name weathersensegui --overwrite
+$result = az storage blob upload-batch -s .\dist-compressed\weathersense-angular\browser -d '$web' --account-name weathersensegui --overwrite
 $fileList = $result | jq '.[].Blob'
-az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n index.html
 
 # TODO
 foreach($f in $fileList) {
 az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n $f  
  }
 
-az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n index.html
 az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n main.ea10f696f309f18a.js
+az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n styles.ee8bbc17a1a0c0ea.css
 az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n main.ff9a5dc28e23e64e.js
+az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n index.html
 az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n polyfills.24cbda400234e41e.js
 az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n runtime.f7249a53dc95b10f.js
-az storage blob update --account-name $AZURE_GUI_STORAGE_ACCOUNT -c '$web' --content-encoding GZip -n styles.ee8bbc17a1a0c0ea.css
 ```
+
+
+az storage blob update --account-name weathersensegui -c '$web' --content-encoding GZip -n chunk-42NE2CY3.js
+az storage blob update --account-name weathersensegui -c '$web' --content-encoding GZip -n chunk-Q2FBJJVH.js
+az storage blob update --account-name weathersensegui -c '$web' --content-encoding GZip -n index.html
+az storage blob update --account-name weathersensegui -c '$web' --content-encoding GZip -n main-LP7G47IW.js
+az storage blob update --account-name weathersensegui -c '$web' --content-encoding GZip -n polyfills-FFHMD2TL.js
+az storage blob update --account-name weathersensegui -c '$web' --content-encoding GZip -n styles-SFLE7SSE.css
 
 ## Running unit tests
 
