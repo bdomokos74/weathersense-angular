@@ -1,13 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {IoTService} from "../iot.service";
+import {IoTService} from "../common/services/iot.service";
 import { MatTableModule } from '@angular/material/table';
 import { DateTime } from 'luxon';
 
 @Component({
   selector: 'app-device-view',
-  templateUrl: './device-view.component.html',
-  styleUrls: ['./device-view.component.css'],
+  templateUrl: './devices-view.component.html',
+  styleUrls: ['./devices-view.component.css'],
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({height: '0px', minHeight: '0'})),
@@ -21,7 +21,7 @@ import { DateTime } from 'luxon';
   ]
 })
 
-export class DeviceViewComponent implements OnInit {
+export class DevicesViewComponent implements OnInit {
   devices: DeviceRow[] = [];
   columnsToDisplay: string[] = [
     'id',

@@ -1,17 +1,15 @@
-import { ChartExperimentComponent } from "./chart-experiment/chart-experiment.component";
-import { ChartViewDeviceComponent } from "./chart-view-device/chart-view-device.component";
-import { ChartViewTimeComponent } from "./chart-view-time/chart-view-time.component";
-import { DeviceViewComponent } from "./device-view/device-view.component";
-import { HomeComponent } from "./home/home.component";
-import { LoginFailedComponent } from "./login-failed/login-failed.component";
+import { DiffViewComponent } from "./diff-view/diff-view.component";
+import { DashboardComponent } from "./dashboard/dashboard.component";
+import { DevicesViewComponent } from "./devices-view/devices-view.component";
+import { AboutComponent } from "./about/about.component";
+import { LoginFailedComponent } from "./common/login-failed/login-failed.component";
 import { ProfileComponent } from "./profile/profile.component";
 
 export const routes = [
-  {path: '', component: HomeComponent},
+  {path: '', component: DashboardComponent},
   {path: 'login-failed', component: LoginFailedComponent},
-  {path: 'device-view', component: DeviceViewComponent},
+  {path: 'device-view', component: DevicesViewComponent},
   {path: 'profile', component: ProfileComponent},
-  {path: 'chart-view-device', component: ChartViewDeviceComponent},
-  {path: 'chart-view-time', component: ChartViewTimeComponent},
-  {path: 'experiment', component: ChartExperimentComponent},
+  {path: 'diff-view', component: DiffViewComponent},
+  {path: 'dashboard', component: DashboardComponent}
 ];

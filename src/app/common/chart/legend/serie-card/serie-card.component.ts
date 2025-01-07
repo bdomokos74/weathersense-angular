@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {TimeSeries} from "../../timeseries";
-import {ChartService} from "../../chart.service";
+import {TimeSeries} from "../../../timeseries";
+import {ChartService} from "../../../services/chart.service";
 import {CommonModule, NgClass} from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 

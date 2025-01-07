@@ -1,15 +1,10 @@
 # WeathersenseAngular2
 
-
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Code scaffolding
-
-Run `ng g component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-### Compressing, build and deploy SPA
+## Compressing, build and deploy SPA
 
 Need to set Content-encoding of the zipped files to GZip.
 
@@ -38,7 +33,7 @@ foreach($f in $fileList) {
 }
 ```
 
-### Export devices
+## Export devices
 
 Create a file with the below content:
 
@@ -58,13 +53,13 @@ az rest -m get --header "Accept=application/json" -u 'https://management.azure.c
 This will create a devices.txt in the given container.
 
 
-### Add d3
+## Add d3
 
 ```bash
 npm install d3 && npm install @types/d3 --save-dev
 ```
 
-### Notes
+## Notes
 
 https://docs.microsoft.com/en-us/azure/active-directory/develop/msal-client-application-configuration
 
@@ -92,9 +87,9 @@ https://github.com/Azure-Samples/ms-identity-javascript-angular-tutorial/blob/ma
 
 https://learn.microsoft.com/en-gb/azure/active-directory/develop/v2-oauth2-auth-code-flow
 
-### Scratchpad
+## Scratchpad
 
-#### IoT HUB query
+### IoT HUB query
 
 ```
 SELECT deviceId, properties.desired.do[sensors.json](..%2F..%2FDownloads%2Fsensors.json)Sleep, properties.reported.fwVersion, properties.reported.gitRevision, properties.reported.$metadata.$lastUpdated
@@ -131,9 +126,6 @@ az ad app permission list --id 5ee20736-5cc8-4466-acac-fe2062a9a1a7
 ]
 
 az role definition list --query "[].{name: name, descr: description}[? contains(descr, 'IoT')]"
-
-
-
 
 5ee20736-5cc8-4466-acac-fe2062a9a1a7 <- wstestapp
 89d10474-74af-4874-99a7-c23c2f643083 <- iot hub

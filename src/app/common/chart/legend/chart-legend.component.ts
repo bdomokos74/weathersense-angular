@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ChartData} from "../chart-data";
-import {TimeSeries} from "../timeseries";
+import {ChartData} from "../../model/chart-data";
+import {TimeSeries} from "../../timeseries";
 import { SerieCardComponent } from './serie-card/serie-card.component';
 import { CommonModule } from '@angular/common';
 

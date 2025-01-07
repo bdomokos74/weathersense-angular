@@ -9,7 +9,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { TopBarComponent } from './top-bar/top-bar.component';
+import { TopBarComponent } from './common/top-bar/top-bar.component';
 import { RouterModule } from '@angular/router';
 import { MSAL_GUARD_CONFIG, MsalBroadcastService, MsalGuardConfiguration, MsalModule, MsalService } from '@azure/msal-angular';
 import { filter, Subject, takeUntil } from 'rxjs';

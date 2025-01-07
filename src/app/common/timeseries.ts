@@ -1,5 +1,5 @@
-import { MeasurementType } from "./measurement-type";
-import { MeasKey, Measurement } from "./measurement";
+import { MeasurementType } from "./model/measurement-type";
+import { MeasKey, Measurement } from "./model/measurement";
 import * as d3 from "d3";
 import { DateTime } from 'luxon';
 

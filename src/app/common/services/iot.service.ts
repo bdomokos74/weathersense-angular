@@ -1,11 +1,11 @@
 import {Injectable} from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import {Observable} from "rxjs";
-import {Measurement} from "./measurement";
-import {MeasurementType} from "./measurement-type";
-import {environment} from "../environments/environment";
+import {Measurement} from "../model/measurement";
+import {MeasurementType} from "../model/measurement-type";
+import {environment} from "../../../environments/environment";
 import {MsalService} from "@azure/msal-angular";
-import {DeviceTags, DeviceType} from "./device-type";
+import {DeviceTags, DeviceType} from "../model/device-type";
 
 @Injectable({providedIn: 'root'})
 export class IoTService {
@@ -46,7 +46,7 @@ export class IoTService {
                   tags: tags
                 }
               });
-              
+
             subscriber.next(devs);
           },
           complete() {

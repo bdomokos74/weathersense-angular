@@ -1,20 +1,19 @@
-import { Component, OnInit } from '@angular/core'
-import { ChartData } from "../chart-data"
-import { MeasurementType } from "../measurement-type"
-import { IoTService } from "../iot.service"
-import { CommonModule, DatePipe } from "@angular/common"
-import { MeasKey, Measurement } from "../measurement"
-import { TimeSeries } from "../timeseries"
-import { ChartService } from "../chart.service"
-import { catchError, of } from "rxjs";
-import { ChartMenuComponent } from '../chart-menu/chart-menu.component'
-import { ChartLegendComponent } from '../chart-legend/chart-legend.component'
-import { TimeChartComponent } from '../time-chart/time-chart.component'
+import {Component, OnInit} from '@angular/core'
+import {ChartData} from "../common/model/chart-data"
+import {MeasurementType} from "../common/model/measurement-type"
+import {IoTService} from "../common/services/iot.service"
+import {CommonModule, DatePipe} from "@angular/common"
+import {MeasKey, Measurement} from "../common/model/measurement"
+import {TimeSeries} from "../common/timeseries"
+import {ChartService} from "../common/services/chart.service"
+import {ChartMenuComponent} from '../common/chart/menu/chart-menu.component'
+import {ChartLegendComponent} from '../common/chart/legend/chart-legend.component'
+import {TimeChartComponent} from '../common/chart/time-chart/time-chart.component'
 
 @Component({
-  selector: 'app-chart-view-time',
-  templateUrl: './chart-view-time.component.html',
-  styleUrls: ['./chart-view-time.component.css'],
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css'],
   standalone: true,
   imports: [
     ChartMenuComponent,
@@ -23,15 +22,9 @@ import { TimeChartComponent } from '../time-chart/time-chart.component'
     CommonModule
   ]
 })
-export class ChartViewTimeComponent implements OnInit {
+export class DashboardComponent implements OnInit {
   pipe = new DatePipe('en-US')
   private fmt: string = 'yyyyMMdd' // TODO refactor duplicates
-  // TODO move this to the following structure:
-  // chart/device-view
-  // chart/time-view
-  // chart/menu
-  // chart/legend
-  //...
 
   constructor(private iotService: IoTService, private chartService: ChartService) {
   }

@@ -1,7 +1,7 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import * as d3 from 'd3';
-import {TimeSeries, Range} from "../timeseries";
-import {ChartData} from "../chart-data";
+import {TimeSeries, Range} from "../../timeseries";
+import {ChartData} from "../../model/chart-data";
 import {asyncScheduler, fromEvent, throttleTime} from "rxjs";
 
 @Component({

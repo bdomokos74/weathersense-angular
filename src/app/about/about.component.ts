@@ -3,12 +3,12 @@ import { versions } from '../../environments/versions';
 import { environment } from '../../environments/environment';
 @Component({
   selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css'],
+  templateUrl: './about.component.html',
+  styleUrls: ['./about.component.css'],
   standalone: true,
   imports: []
 })
-export class HomeComponent {
+export class AboutComponent {
   version = versions.version;
   revision = versions.revision;
   branch = versions.branch;
