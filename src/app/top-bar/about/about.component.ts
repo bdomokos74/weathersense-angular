@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { versions } from '../../environments/versions';
-import { environment } from '../../environments/environment';
+import { versions } from '../../../environments/versions';
+import { environment } from '../../../environments/environment';
 @Component({
   selector: 'app-home',
   templateUrl: './about.component.html',
