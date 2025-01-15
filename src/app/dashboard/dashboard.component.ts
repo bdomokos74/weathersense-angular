@@ -91,8 +91,9 @@ export class DashboardComponent implements OnInit {
   private prepareDataAll() {
     let leftSeries: TimeSeries[] = [];
     console.log("prep all", this.devices, this.measType);
-    try {
-      for (let i = 0; i < this.devices.length; i++) {
+
+    for (let i = 0; i < this.devices.length; i++) {
+      try {
         if (this.data[this.devices[i]] !== undefined) {
 
           leftSeries.push(TimeSeries.createTimeSerie(this.devices[i], this.data[this.devices[i]], 'ts', this.measType.code1 as MeasKey, this.measType, "" + (i + 1), this.measType.maxVal))
@@ -103,14 +104,15 @@ export class DashboardComponent implements OnInit {
               leftSeries.push(serie2)
           }
         }
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        console.log("prep error: ", error?.message);
-      } else {
-        console.log("prep error: ", error);
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log("prep error: ", error?.message);
+        } else {
+          console.log("prep error: ", error);
+        }
       }
     }
+
     this.chartData = {
       leftSeries: leftSeries,
       rightSeries: []

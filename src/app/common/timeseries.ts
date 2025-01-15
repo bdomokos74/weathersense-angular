@@ -80,33 +80,33 @@ export class TimeSeries {
     // const xScale = d3.scaleTime().domain(xDomain).range([xRange.min, xRange.max]);//.interpolate(d3.interpolateRound);
     // const yScale = d3.scaleLinear().domain(yDomain).range([yRange.min, yRange.max]);
 
-    let empty = Y.filter((item: any) => item != undefined).length == 0
+    let empty = Y.filter((item: any) => item != undefined).length == 0;
 
     let result = new TimeSeries(source, type, xDomain, yDomain, tsMapper, yMapper, defined, code, empty, color, measData);
-    if (empty) return result
+    if (empty) return result;
 
-    let maxIndex = d3.maxIndex(Y)
-    let minIndex = d3.minIndex(Y)
-    let yMin = Y[minIndex]
-    let yMax = Y[maxIndex]
-    let yCurr = Y[Y.length - 1]
-    result.yMinTime = DateTime.fromMillis(X[minIndex]).toFormat('HH:mm')
-    result.yMaxTime = DateTime.fromMillis(X[maxIndex]).toFormat('HH:mm')
-    result.yCurrTime = DateTime.fromMillis(X[X.length - 1]).toFormat('HH:mm')
+    let maxIndex = d3.maxIndex(Y);
+    let minIndex = d3.minIndex(Y);
+    let yMin = Y[minIndex];
+    let yMax = Y[maxIndex];
+    let yCurr = Y[Y.length - 1];
+    result.yMinTime = DateTime.fromMillis(X[minIndex]).toFormat('HH:mm');
+    result.yMaxTime = DateTime.fromMillis(X[maxIndex]).toFormat('HH:mm');
+    result.yCurrTime = DateTime.fromMillis(X[X.length - 1]).toFormat('HH:mm');
 
-    let digits = 2
+    let digits = 2;
     if (type.name === 'Pressure') {
       if (yMax > 10000) {
-        yMin /= 100
-        yMax /= 100
-        yCurr /= 100
+        yMin /= 100;
+        yMax /= 100;
+        yCurr /= 100;
       }
-      digits = 0
+      digits = 0;
     }
-    result.yMin = yMin.toFixed(digits)
-    result.yMax = yMax.toFixed(digits)
-    result.yCurr = yCurr.toFixed(digits)
-    return result
+    result.yMin = yMin.toFixed(digits);
+    result.yMax = yMax.toFixed(digits);
+    result.yCurr = yCurr.toFixed(digits);
+    return result;
   }
 
   setScales(xScale: any, yScale: any) {
